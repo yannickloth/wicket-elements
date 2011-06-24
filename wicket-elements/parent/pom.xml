@@ -29,6 +29,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <artifactId>jbp-common</artifactId>
+                <groupId>com.googlecode.jbp</groupId>
+                <version>1.0.0</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
                 <artifactId>security</artifactId>
                 <groupId>com.googlecode.wicketelements</groupId>
                 <version>${project.version}</version>

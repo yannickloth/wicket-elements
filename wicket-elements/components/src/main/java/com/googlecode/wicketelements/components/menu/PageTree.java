@@ -16,17 +16,17 @@
  */
 package com.googlecode.wicketelements.components.menu;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
+import com.googlecode.jbp.common.requirements.ParamRequirements;
+import org.apache.wicket.Page;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.wicket.Application;
-import org.apache.wicket.Page;
 
 /**
  * Class that represents a Wicket page tree (hierarchy).  Used to show
  * navigation and breadcrumb menus.
- * 
+ *
  * @author Yannick LOTH
  */
 public class PageTree {
@@ -45,8 +45,8 @@ public class PageTree {
     }
 
     public PageTree(final Class<? extends Page> pageClassParam, final List<PageTree> childrenParam) {
-        ParamValidator.notNull(pageClassParam);
-        ParamValidator.notNull(childrenParam);
+        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
+        ParamRequirements.INSTANCE.requireNotNull(childrenParam);
         pageClass = pageClassParam;
         children = childrenParam;
         if (childrenParam != null) {
@@ -58,7 +58,7 @@ public class PageTree {
     }
 
     public PageTree(final List<PageTree> childrenParam) {
-        ParamValidator.notNull(childrenParam);
+        ParamRequirements.INSTANCE.requireNotNull(childrenParam);
         children = childrenParam;
         addToMap(pageMap);
     }

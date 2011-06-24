@@ -16,12 +16,14 @@
  */
 package com.googlecode.wicketelements.security.shiro;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
+
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.security.IPermissionBuilder;
 
 /**
  * Simple permission builder that builds permission by appending the permission
  * detail suffix to the permission base.
+ *
  * @author Yannick LOTH
  */
 public class SimplePermissionBuilder implements IPermissionBuilder {
@@ -32,17 +34,17 @@ public class SimplePermissionBuilder implements IPermissionBuilder {
     public static final String COLON = ":";
 
     public String buildInstatiationPermissionString(final String permBase) {
-        ParamValidator.notBlank(permBase);
+        ParamRequirements.INSTANCE.requireNotBlank(permBase);
         return permBase.trim().concat(COLON).concat(INSTANTIATE);
     }
 
     public String buildRenderPermissionString(final String permBase) {
-        ParamValidator.notBlank(permBase);
+        ParamRequirements.INSTANCE.requireNotBlank(permBase);
         return permBase.trim().concat(COLON).concat(RENDER);
     }
 
     public String buildEnablePermissionString(final String permBase) {
-        ParamValidator.notBlank(permBase);
+        ParamRequirements.INSTANCE.requireNotBlank(permBase);
         return permBase.trim().concat(COLON).concat(ENABLE);
     }
 }

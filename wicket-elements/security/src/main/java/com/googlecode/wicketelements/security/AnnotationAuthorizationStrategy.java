@@ -16,8 +16,8 @@
  */
 package com.googlecode.wicketelements.security;
 
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.common.annotation.AnnotationHelper;
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -37,12 +37,12 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, 
     private final IPermissionBuilder permissionBuilder;
 
     public AnnotationAuthorizationStrategy(final IPermissionBuilder permissionBuilderParam) {
-        ParamValidator.notNull(permissionBuilderParam);
+        ParamRequirements.INSTANCE.requireNotNull(permissionBuilderParam);
         permissionBuilder = permissionBuilderParam;
     }
 
     public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClassParam) {
-        ParamValidator.notNull(componentClassParam);
+        ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
         if (AnnotationHelper.hasAnnotation(componentClassParam, PermissionBase.class)) { //permission check required
             final PermissionBase annot = componentClassParam.getAnnotation(PermissionBase.class);
             LOGGER.debug("PermissionBase annotation present");
@@ -64,8 +64,8 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, 
     }
 
     public boolean isActionAuthorized(final Component componentParam, final Action actionParam) {
-        ParamValidator.notNull(componentParam);
-        ParamValidator.notNull(actionParam);
+        ParamRequirements.INSTANCE.requireNotNull(componentParam);
+        ParamRequirements.INSTANCE.requireNotNull(actionParam);
         final Class<? extends Component> compClass = componentParam.getClass();
         if (AnnotationHelper.hasAnnotation(compClass, PermissionBase.class)) { //permission check required
             final PermissionBase annot = AnnotationHelper.getAnnotation(compClass, PermissionBase.class);

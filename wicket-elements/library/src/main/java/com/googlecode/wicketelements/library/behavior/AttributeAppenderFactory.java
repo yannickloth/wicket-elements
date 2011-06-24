@@ -16,7 +16,8 @@
  */
 package com.googlecode.wicketelements.library.behavior;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
+
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.Model;
 
@@ -38,7 +39,7 @@ public final class AttributeAppenderFactory {
      * @return The new attribute appender.
      */
     public static AttributeAppender newAttributeAppenderForClass(final String cssClassNameParam) {
-        ParamValidator.notBlank(cssClassNameParam);
+        ParamRequirements.INSTANCE.requireNotBlank(cssClassNameParam);
         return new AttributeAppender(CLASS_ATTRIBUTE, new Model<String>(cssClassNameParam.trim()), WHITE_SPACE);
     }
 }

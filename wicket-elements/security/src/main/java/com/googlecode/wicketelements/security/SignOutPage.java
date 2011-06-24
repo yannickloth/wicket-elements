@@ -16,7 +16,8 @@
  */
 package com.googlecode.wicketelements.security;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
+
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Generic sign out page.
+ *
  * @author Yannick LOTH
  */
 public final class SignOutPage extends WebPage {
@@ -34,7 +36,7 @@ public final class SignOutPage extends WebPage {
     public static final String REDIRECTPAGE_PARAM = "redirectPage";
 
     public SignOutPage(final PageParameters params) {
-        ParamValidator.notNull(params);
+        ParamRequirements.INSTANCE.requireNotNull(params);
         final String page = params.getString(REDIRECTPAGE_PARAM);
         Class<? extends Page> pageClass;
         if (page != null && !StringUtils.isBlank(page)) {

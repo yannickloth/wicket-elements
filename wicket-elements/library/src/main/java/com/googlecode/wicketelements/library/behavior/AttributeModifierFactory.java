@@ -16,14 +16,14 @@
  */
 package com.googlecode.wicketelements.library.behavior;
 
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.model.Model;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
 
 /**
  * Factory to create an attribute modifier for various attributes.
- * 
+ *
  * @author Yannick LOTH
  */
 public final class AttributeModifierFactory {
@@ -35,30 +35,28 @@ public final class AttributeModifierFactory {
 
     /**
      * Instanciates a new attribute modifier for the attribute <code>alt</code>.
-     * 
-     * @param altText
-     *            The name of the <code>alt</code> text to add to the tag. Must
-     *            not be blank.
+     *
+     * @param altText The name of the <code>alt</code> text to add to the tag. Must
+     *                not be blank.
      * @return The new attribute modifier.
      */
     public static AttributeModifier newAttributeAppenderForAlt(
             final String altText) {
-        ParamValidator.notBlank(altText);
+        ParamRequirements.INSTANCE.requireNotBlank(altText);
         return new AttributeModifier(ALT_ATTRIBUTE, true, new Model<String>(
                 altText));
     }
 
     /**
      * Instanciates a new attribute modifier for the attribute <code>src</code>.
-     * 
-     * @param srcText
-     *            The name of the <code>src</code> text to add to the tag. Must
-     *            not be blank.
+     *
+     * @param srcText The name of the <code>src</code> text to add to the tag. Must
+     *                not be blank.
      * @return The new attribute modifier.
      */
     public static AttributeModifier newAttributeAppenderForSrc(
             final String srcText) {
-        ParamValidator.notBlank(srcText);
+        ParamRequirements.INSTANCE.requireNotBlank(srcText);
         return new AttributeModifier(SRC_ATTRIBUTE, true, new Model<String>(
                 srcText));
     }
@@ -66,15 +64,14 @@ public final class AttributeModifierFactory {
     /**
      * Instanciates a new attribute modifier for the attribute
      * <code>title</code>.
-     * 
-     * @param titleText
-     *            The name of the <code>title</code> text to add to the tag.
-     *            Must not be blank.
+     *
+     * @param titleText The name of the <code>title</code> text to add to the tag.
+     *                  Must not be blank.
      * @return The new attribute modifier.
      */
     public static AttributeModifier newAttributeAppenderForTitle(
             final String titleText) {
-        ParamValidator.notBlank(titleText);
+        ParamRequirements.INSTANCE.requireNotBlank(titleText);
         return new AttributeModifier(TITLE_ATTRIBUTE, true, new Model<String>(
                 titleText));
     }
@@ -82,15 +79,14 @@ public final class AttributeModifierFactory {
     /**
      * Instanciates a new attribute modifier for the attribute
      * <code>class</code>.
-     * 
-     * @param cssClassNameParam
-     *            The name of the CSS class to add to the tag. Must not be
-     *            blank.
+     *
+     * @param cssClassNameParam The name of the CSS class to add to the tag. Must not be
+     *                          blank.
      * @return The new attribute modifier.
      */
     public static AttributeModifier newAttributeModifierForClass(
             final String cssClassNameParam) {
-        ParamValidator.notBlank(cssClassNameParam);
+        ParamRequirements.INSTANCE.requireNotBlank(cssClassNameParam);
         return new AttributeModifier(CLASS_ATTRIBUTE, true, new Model<String>(
                 cssClassNameParam.trim()));
     }

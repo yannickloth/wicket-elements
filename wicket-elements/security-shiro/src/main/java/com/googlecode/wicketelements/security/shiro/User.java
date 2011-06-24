@@ -16,10 +16,9 @@
  */
 package com.googlecode.wicketelements.security.shiro;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
-import com.googlecode.wicketelements.security.IUser;
-import java.io.Serializable;
 
+import com.googlecode.jbp.common.requirements.ParamRequirements;
+import com.googlecode.wicketelements.security.IUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.mgt.SecurityManager;
@@ -29,8 +28,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
 /**
- *
  * @author Yannick LOTH
  */
 public class User implements IUser, Serializable {
@@ -54,7 +54,7 @@ public class User implements IUser, Serializable {
     }
 
     public boolean hasPermission(final String permission) {
-        ParamValidator.notBlank(permission);
+        ParamRequirements.INSTANCE.requireNotBlank(permission);
         LOGGER.debug("Check for permission: {}", permission);
         final Subject currentUser = SecurityUtils.getSubject();
         LOGGER.debug("Current user: {}", currentUser.getPrincipal().toString());
