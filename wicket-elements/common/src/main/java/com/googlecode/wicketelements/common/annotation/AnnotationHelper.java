@@ -16,11 +16,13 @@
  */
 package com.googlecode.wicketelements.common.annotation;
 
-import com.googlecode.wicketelements.common.parameter.ParamValidator;
 import java.lang.annotation.Annotation;
+
+import static com.googlecode.jbp.common.requirements.ParamRequirements.INSTANCE;
 
 /**
  * Provides utility methods process annotations.
+ *
  * @author Yannick LOTH
  */
 public final class AnnotationHelper {
@@ -31,10 +33,11 @@ public final class AnnotationHelper {
     /**
      * Checks if the class or its superclass and interface hierarchies have the
      * specified annotation.
-     * @param classParam The class to check for the specified annotation.
+     *
+     * @param classParam      The class to check for the specified annotation.
      * @param annotationClass The specified annotation.
      * @return <code>true</code> if the class has the specified annotation,
-     * <code>false</else>.
+     *         <code>false</else>.
      */
     public static <A extends Annotation> boolean hasAnnotation(Class<?> classParam, final Class<A> annotationClass) {
         return hasAnnotation(classParam, annotationClass, true, true);
@@ -43,18 +46,18 @@ public final class AnnotationHelper {
     /**
      * Checks if the class has the specified annotation.
      *
-     * @param classParam The class to check for the specified annotation.
-     * @param annotationClass The specified annotation.
-     * @param  recursivelyCheckInterfaces <code>true</code> if the interface
-     * hierarchy also has to be checked for the specified annotation.
+     * @param classParam                   The class to check for the specified annotation.
+     * @param annotationClass              The specified annotation.
+     * @param recursivelyCheckInterfaces   <code>true</code> if the interface
+     *                                     hierarchy also has to be checked for the specified annotation.
      * @param recursivelyCheckSuperClasses <code>true</code> if the superclass
-     * hierarchy also has to be checked for the specified annotation.
+     *                                     hierarchy also has to be checked for the specified annotation.
      * @return <code>true</code> if the class has the specified annotation,
-     * <code>false</else>.
+     *         <code>false</else>.
      */
     public static <A extends Annotation> boolean hasAnnotation(Class<?> classParam, final Class<A> annotationClass, final boolean recursivelyCheckSuperClasses, final boolean recursivelyCheckInterfaces) {
-        ParamValidator.notNull(classParam);
-        ParamValidator.notNull(annotationClass);
+        INSTANCE.requireNotNull(classParam);
+        INSTANCE.requireNotNull(annotationClass);
         if (!annotationClass.isAnnotation()) {
             throw new IllegalArgumentException("Parameter 'annotationClass' must be the Class of an annotation type, but is not.");
         }
@@ -79,11 +82,12 @@ public final class AnnotationHelper {
 
     /**
      * Gets the specified annotation from the class or it supertype hierarchies.
+     *
      * @param <A>
-     * @param classParam The class to check for the specified annotation.
+     * @param classParam      The class to check for the specified annotation.
      * @param annotationClass The specified annotation to return.
      * @return Returns the specified annotation or <code>null</code> if none
-     * found.
+     *         found.
      */
     public static <A extends Annotation> A getAnnotation(Class classParam, final Class<A> annotationClass) {
         return getAnnotation(classParam, annotationClass, true, true);
@@ -91,19 +95,20 @@ public final class AnnotationHelper {
 
     /**
      * Gets the specified annotation from the class or it supertype hierarchies.
+     *
      * @param <A>
-     * @param classParam The class to check for the specified annotation.
-     * @param annotationClass The specified annotation to return.
-     * @param  recursivelyCheckInterfaces <code>true</code> if the interface
-     * hierarchy also has to be checked for the specified annotation.
+     * @param classParam                   The class to check for the specified annotation.
+     * @param annotationClass              The specified annotation to return.
+     * @param recursivelyCheckInterfaces   <code>true</code> if the interface
+     *                                     hierarchy also has to be checked for the specified annotation.
      * @param recursivelyCheckSuperClasses <code>true</code> if the superclass
-     * hierarchy also has to be checked for the specified annotation.
+     *                                     hierarchy also has to be checked for the specified annotation.
      * @return Returns the specified annotation or <code>null</code> if none
-     * found.
+     *         found.
      */
     public static <A extends Annotation> A getAnnotation(Class classParam, final Class<A> annotationClass, final boolean recursivelyCheckSuperClasses, final boolean recursivelyCheckInterfaces) {
-        ParamValidator.notNull(classParam);
-        ParamValidator.notNull(annotationClass);
+        INSTANCE.requireNotNull(classParam);
+        INSTANCE.requireNotNull(annotationClass);
         if (!annotationClass.isAnnotation()) {
             throw new IllegalArgumentException("Parameter 'annotationClass' must be the Class of an annotation type, but is not.");
         }
