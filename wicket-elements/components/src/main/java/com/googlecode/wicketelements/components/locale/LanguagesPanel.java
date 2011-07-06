@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2011 Yannick LOTH.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *  under the License.
+ */
 package com.googlecode.wicketelements.components.locale;
 
-import java.util.Locale;
-
+import com.googlecode.jbp.common.requirements.ParamRequirements;
+import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -10,12 +26,12 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.StringResourceModel;
 
-import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
+import java.util.Locale;
 
 /**
  * Panel that renders a list of locale links which, once clicked, change the
  * current locale of the user.
- * 
+ *
  * @author Yannick LOTH
  */
 public class LanguagesPanel extends Panel {
@@ -31,9 +47,8 @@ public class LanguagesPanel extends Panel {
 
     /**
      * This method is executed when the link to a locale is added to the page.
-     * 
-     * @param localeLink
-     *            The link for the specific locale.
+     *
+     * @param localeLink The link for the specific locale.
      */
     protected void onLocaleLink(final Link<Locale> localeLink) {
     }
@@ -42,20 +57,21 @@ public class LanguagesPanel extends Panel {
      * This method is executed when the link to the current locale is added to
      * the page. It may be useful, for example, to disable the link, as the
      * locale is already selected, or to add some attribute to the tag.
-     * 
-     * @param localeLink
-     *            The link for the current locale.
+     *
+     * @param localeLink The link for the current locale.
      */
     protected void onSelectedLocaleLink(final Link<Locale> localeLink) {
     }
 
     private void populateRepeatingView(final LocalesListModel locales) {
+        ParamRequirements.INSTANCE.requireNotNull(locales);
+        ParamRequirements.INSTANCE.requireNotNull(locales.getObject());
         final ListView<Locale> lv = new ListView<Locale>("languages",
                 locales.getObject()) {
 
             @Override
-            protected void populateItem(final ListItem item) {
-                final Locale locale = (Locale) item.getModelObject();
+            protected void populateItem(final ListItem<Locale> item) {
+                final Locale locale = item.getModelObject();
                 {
                     final Link<Locale> link = new Link<Locale>("languageLink",
                             new LocaleModel(locale)) {

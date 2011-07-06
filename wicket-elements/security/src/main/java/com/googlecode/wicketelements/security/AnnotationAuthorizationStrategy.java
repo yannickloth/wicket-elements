@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Yannick LOTH
  */
 public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, IUnauthorizedComponentInstantiationListener {
@@ -94,6 +93,7 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, 
     }
 
     public void onUnauthorizedInstantiation(final Component componentParam) {
+        ParamRequirements.INSTANCE.requireNotNull(componentParam);
         LOGGER.debug("Unauthorized instantiation, setting sign in page as response.");
         throw new RestartResponseAtInterceptPageException(SecureWebApplication.get().getSignInPage());
     }

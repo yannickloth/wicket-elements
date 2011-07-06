@@ -16,6 +16,7 @@
  */
 package com.googlecode.wicketelements.components.menu;
 
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -25,7 +26,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- *
  * @author Yannick LOTH
  */
 public class MenuPanel extends Panel {
@@ -38,6 +38,7 @@ public class MenuPanel extends Panel {
     }
 
     private void init(final PageTreeModel pages) {
+        ParamRequirements.INSTANCE.requireNotNull(pages);
         populateRepeatingView(pages);
     }
 
@@ -85,6 +86,7 @@ public class MenuPanel extends Panel {
      * This method is executed when the link to the current locale is added to
      * the page.  It may be useful, for example, to disable the link, as the
      * locale is already selected, or to add some attribute to the tag.
+     *
      * @param pageLink The link for the current page.
      */
     protected void onCurrentPageLink(final Link<Class<Page>> pageLink) {
@@ -93,6 +95,7 @@ public class MenuPanel extends Panel {
     /**
      * This method is executed when the link to a locale is added to
      * the page.
+     *
      * @param pageLink The link for the specific page.
      */
     protected void onPageLink(final Link<Class<Page>> pageLink) {

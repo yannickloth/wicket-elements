@@ -40,6 +40,7 @@ public class PageTree {
     }
 
     public PageTree(final Class<? extends Page> pageClassParam) {
+        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
         pageClass = pageClassParam;
         addToMap(pageMap);
     }
@@ -75,6 +76,7 @@ public class PageTree {
     }
 
     public PageTree getPageTree(final Class<? extends Page> pageClass) {
+        ParamRequirements.INSTANCE.requireNotNull(pageClass);
         return pageMap.get(pageClass);
     }
 
