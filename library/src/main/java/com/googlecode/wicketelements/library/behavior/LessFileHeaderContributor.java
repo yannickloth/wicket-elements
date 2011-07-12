@@ -3,11 +3,12 @@ package com.googlecode.wicketelements.library.behavior;
 import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.StringHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
-public class LessFileHeaderContributor implements IHeaderContributor {
+public class LessFileHeaderContributor extends AbstractBehavior implements IHeaderContributor {
     private ResourceReference reference;
 
     public LessFileHeaderContributor(final Class<?> scopeParam, final String nameParam) {
