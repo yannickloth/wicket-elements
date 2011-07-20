@@ -16,33 +16,26 @@
  */
 package com.googlecode.wicketelements.security;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- *
  * @author Yannick LOTH
  */
 public class SecureSession extends WebSession {
 
     private transient static final Logger LOGGER = LoggerFactory.getLogger(SecureSession.class);
     private IUser user;
+    private List<SessionInvalidator> invalidators = Collections.emptyList();
 
     public SecureSession(final Request request) {
         super(request);
-    }
-
-    public SecureSession(final WebApplication application, final Request request) {
-        super(application, request);
-    }
-
-    public SecureSession(final Application application, final Request request) {
-        super(application, request);
     }
 
     public static SecureSession get() {
@@ -60,8 +53,9 @@ public class SecureSession extends WebSession {
 
     /**
      * To check if the current user is authenticated.
+     *
      * @return Returns <code>true</code> if the current user is authenticated,
-     * <code>false</code> else.
+     *         <code>false</code> else.
      */
     public boolean isAuthenticated() {
         return user != null;
@@ -71,6 +65,9 @@ public class SecureSession extends WebSession {
     public void invalidate() {
         LOGGER.debug("Invalidating session with user: {}", user);
         user = null;
+        for (final SessionInvalidator current : invalidators) {
+            current.invalidate((WebSession) WebSession.get());
+        }
         super.invalidate();
     }
 
@@ -78,6 +75,9 @@ public class SecureSession extends WebSession {
     public void invalidateNow() {
         LOGGER.debug("Invalidating now session with user: {}", user);
         user = null;
+        for (final SessionInvalidator current : invalidators) {
+            current.invalidate((WebSession) WebSession.get());
+        }
         super.invalidateNow();
     }
 }
