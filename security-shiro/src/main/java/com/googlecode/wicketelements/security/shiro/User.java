@@ -21,10 +21,7 @@ import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.security.IUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.permission.WildcardPermission;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.apache.wicket.injection.web.InjectorHolder;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,21 +33,9 @@ import java.io.Serializable;
 public class User implements IUser, Serializable {
 
     private transient static final Logger LOGGER = LoggerFactory.getLogger(User.class);
-    @SpringBean
-    private transient SecurityManager securityManager;
 
     public User() {
         super();
-        InjectorHolder.getInjector().inject(this);
-        SecurityUtils.setSecurityManager(securityManager);
-    }
-
-    public SecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    public void setSecurityManager(final SecurityManager securityManager) {
-        this.securityManager = securityManager;
     }
 
     public boolean hasPermission(final String permission) {
