@@ -19,7 +19,9 @@ package com.googlecode.wicketelements.security;
 import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.common.annotation.AnnotationHelper;
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -40,8 +42,26 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, 
         permissionBuilder = permissionBuilderParam;
     }
 
+    private boolean isNotSignInOrSignOutPage(final Class<? extends Page> pageClassParam) {
+        return !pageClassParam.equals(SecureWebApplication.get().getSignInPage())
+                && !pageClassParam.equals(SecureWebApplication.get().getSignOutPage());
+    }
+
+    private boolean isErrorPage(final Class<? extends Page> pageClassParam) {
+        return pageClassParam.isAssignableFrom(Application.get().getApplicationSettings().getAccessDeniedPage())
+                || pageClassParam.isAssignableFrom(Application.get().getApplicationSettings().getInternalErrorPage())
+                || pageClassParam.isAssignableFrom(Application.get().getApplicationSettings().getPageExpiredErrorPage());
+    }
+
+    private boolean isLoginRequired(final Application applicationParam) {
+        return false; //TODO check if the annotation @LoginRequired is on the application's class
+    }
+
     public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClassParam) {
         ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
+        if (isLoginRequired(Application.get()) && !SecureSession.get().isAuthenticated()) {
+            throw new RestartResponseAtInterceptPageException(SecureWebApplication.get().getSignInPage());
+        }
         if (AnnotationHelper.hasAnnotation(componentClassParam, PermissionBase.class)) { //permission check required
             final PermissionBase annot = componentClassParam.getAnnotation(PermissionBase.class);
             LOGGER.debug("PermissionBase annotation present");

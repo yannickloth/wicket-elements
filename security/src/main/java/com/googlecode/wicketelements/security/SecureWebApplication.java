@@ -16,23 +16,17 @@
  */
 package com.googlecode.wicketelements.security;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Page;
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
-import org.apache.wicket.Session;
+import org.apache.wicket.*;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
- * 
  * @author Yannick LOTH
  */
+@com.googlecode.wicketelements.security.annotations.SignOutPage(page = SignOutPage.class)
 public abstract class SecureWebApplication extends WebApplication {
 
     private Class<? extends Page> signOutPage;
-    private boolean loginRequired = false;
-    private IAuthenticationStrategy authenticationStrategy = IAuthenticationStrategy.ALLOW_ALL;
     private IAuthorizationStrategy authorizationStrategy;
 
     public SecureWebApplication(final IAuthorizationStrategy authorizationStrategyParam) {
@@ -68,21 +62,5 @@ public abstract class SecureWebApplication extends WebApplication {
     @Override
     public Session newSession(final Request request, final Response response) {
         return new SecureSession(request);
-    }
-
-    public boolean isLoginRequired() {
-        return loginRequired;
-    }
-
-    public void setLoginRequired(final boolean loginRequiredParam) {
-        loginRequired = loginRequiredParam;
-    }
-
-    public IAuthenticationStrategy getAuthenticationStrategy() {
-        return authenticationStrategy;
-    }
-
-    public void setAuthenticationStrategy(final IAuthenticationStrategy authenticationStrategyParam) {
-        authenticationStrategy = authenticationStrategyParam;
     }
 }
