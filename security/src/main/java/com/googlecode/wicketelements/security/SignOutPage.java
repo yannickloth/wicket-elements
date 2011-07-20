@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Yannick LOTH
  */
-public final class SignOutPage extends WebPage {
+public class SignOutPage extends WebPage {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignOutPage.class);
     public static final String REDIRECTPAGE_PARAM = "redirectPage";
@@ -51,6 +51,7 @@ public final class SignOutPage extends WebPage {
             LOGGER.debug("No redirect page, redirecting to application home page.");
             pageClass = getApplication().getHomePage();
         }
+        setStatelessHint(true);
         getSession().invalidateNow();
         getRequestCycle().setRedirect(true);
         setResponsePage(pageClass);
