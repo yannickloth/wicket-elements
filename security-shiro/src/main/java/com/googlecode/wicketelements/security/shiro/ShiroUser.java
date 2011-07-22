@@ -30,11 +30,11 @@ import java.io.Serializable;
 /**
  * @author Yannick LOTH
  */
-public class User implements IUser, Serializable {
+public class ShiroUser implements IUser, Serializable {
 
-    private transient static final Logger LOGGER = LoggerFactory.getLogger(User.class);
+    private transient static final Logger LOGGER = LoggerFactory.getLogger(ShiroUser.class);
 
-    public User() {
+    public ShiroUser() {
         super();
     }
 

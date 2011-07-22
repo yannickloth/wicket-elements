@@ -7,6 +7,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SignInPage {
+@Inherited
+public @interface SignOut {
     Class<? extends Page> page();
 }

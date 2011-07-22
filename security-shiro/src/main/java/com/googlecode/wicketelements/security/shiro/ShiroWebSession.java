@@ -14,17 +14,13 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.security;
+package com.googlecode.wicketelements.security.shiro;
 
-/**
- * Declares methods which build permission strings from the given permission base.
- * @author Yannick LOTH
- */
-public interface IPermissionBuilder {
+import com.googlecode.wicketelements.security.SecureSession;
+import org.apache.wicket.Request;
 
-    String buildInstatiationPermissionString(final String permBase);
-
-    String buildRenderPermissionString(final String permBase);
-
-    String buildEnablePermissionString(final String permBase);
+public class ShiroWebSession extends SecureSession {
+    public ShiroWebSession(final Request request) {
+        super(request);
+    }
 }

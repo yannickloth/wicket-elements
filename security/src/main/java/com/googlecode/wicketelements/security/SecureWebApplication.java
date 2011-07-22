@@ -16,21 +16,27 @@
  */
 package com.googlecode.wicketelements.security;
 
-import org.apache.wicket.*;
+import com.googlecode.wicketelements.security.annotations.SignOut;
+import org.apache.wicket.Application;
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * @author Yannick LOTH
  */
-@com.googlecode.wicketelements.security.annotations.SignOutPage(page = SignOutPage.class)
+@SignOut(page = SignOutPage.class)
 public abstract class SecureWebApplication extends WebApplication {
 
-    private Class<? extends Page> signOutPage;
     private IAuthorizationStrategy authorizationStrategy;
+    private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener;
 
-    public SecureWebApplication(final IAuthorizationStrategy authorizationStrategyParam) {
+    public SecureWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedInstListenerParam) {
         authorizationStrategy = authorizationStrategyParam;
+        unauthorizedComponentInstantiationListener = unauthorizedInstListenerParam;
     }
 
     public SecureWebApplication() {
@@ -39,24 +45,14 @@ public abstract class SecureWebApplication extends WebApplication {
     @Override
     protected void init() {
         super.init();
-        signOutPage = SignOutPage.class;
         if (authorizationStrategy != null) {
             getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
+            getSecuritySettings().setUnauthorizedComponentInstantiationListener(unauthorizedComponentInstantiationListener);
         }
     }
 
     public static SecureWebApplication get() {
         return (SecureWebApplication) Application.get();
-    }
-
-    public abstract Class<? extends Page> getSignInPage();
-
-    public Class<? extends Page> getSignOutPage() {
-        return signOutPage;
-    }
-
-    public void setSignOutPage(final Class<? extends Page> signOutPage) {
-        this.signOutPage = signOutPage;
     }
 
     @Override

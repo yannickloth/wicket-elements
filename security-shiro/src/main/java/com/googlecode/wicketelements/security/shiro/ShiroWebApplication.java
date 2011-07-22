@@ -17,15 +17,17 @@
 package com.googlecode.wicketelements.security.shiro;
 
 import com.googlecode.wicketelements.security.SecureWebApplication;
+import com.googlecode.wicketelements.security.SessionInvalidator;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.wicket.Application;
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
+import org.apache.wicket.*;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Custom web application for use with Shiro.  It's method {@code newRequestCycle()} returns a {@code ShiroRequestCycle}
@@ -39,10 +41,9 @@ public abstract class ShiroWebApplication extends SecureWebApplication {
     public ShiroWebApplication() {
     }
 
-    public ShiroWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final org.apache.shiro.mgt.SecurityManager securityManagerParam) {
-        super(authorizationStrategyParam);
+    protected ShiroWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedInstListenerParam, final SecurityManager securityManagerParam) {
+        super(authorizationStrategyParam, unauthorizedInstListenerParam);
         securityManager = securityManagerParam;
-
     }
 
     @Override
@@ -60,5 +61,14 @@ public abstract class ShiroWebApplication extends SecureWebApplication {
 
     public static ShiroWebApplication get() {
         return (ShiroWebApplication) Application.get();
+    }
+
+    @Override
+    public Session newSession(final Request request, final Response response) {
+        final ShiroWebSession s = new ShiroWebSession(request);
+        final List<SessionInvalidator> invalidators = new ArrayList<SessionInvalidator>();
+        invalidators.add(new ShiroSessionInvalidator());
+        s.setInvalidators(invalidators);
+        return s;
     }
 }

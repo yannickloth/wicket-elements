@@ -14,22 +14,18 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.security;
+package com.googlecode.wicketelements.security.shiro;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.googlecode.wicketelements.security.SessionInvalidator;
+import org.apache.shiro.SecurityUtils;
+import org.apache.wicket.protocol.http.WebSession;
 
 /**
- *
- * @author Yannick LOTH
+ * Logs out the current Shiro subject.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface PermissionBase {
+public class ShiroSessionInvalidator implements SessionInvalidator {
 
-    String value() default "";
+    public void invalidate(final WebSession sessionParam) {
+        SecurityUtils.getSubject().logout();
+    }
 }

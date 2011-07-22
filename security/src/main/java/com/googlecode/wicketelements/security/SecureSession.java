@@ -31,7 +31,7 @@ import java.util.List;
 public class SecureSession extends WebSession {
 
     private transient static final Logger LOGGER = LoggerFactory.getLogger(SecureSession.class);
-    private IUser user;
+    private IUser user = IUser.ALL_PERMISSIONS_USER;
     private List<SessionInvalidator> invalidators = Collections.emptyList();
 
     public SecureSession(final Request request) {
@@ -42,12 +42,19 @@ public class SecureSession extends WebSession {
         return (SecureSession) Session.get();
     }
 
+    public List<SessionInvalidator> getInvalidators() {
+        return invalidators;
+    }
+
+    public void setInvalidators(final List<SessionInvalidator> invalidatorsParam) {
+        invalidators = invalidatorsParam;
+    }
+
     public IUser getUser() {
         return user;
     }
 
     public void setUser(final IUser userParam) {
-        LOGGER.debug("Setting user: {}", userParam);
         user = userParam;
     }
 
@@ -58,16 +65,14 @@ public class SecureSession extends WebSession {
      *         <code>false</code> else.
      */
     public boolean isAuthenticated() {
-        return user != null;
+        return user != null && user != IUser.ALL_PERMISSIONS_USER;
     }
 
     @Override
     public void invalidate() {
-        LOGGER.debug("Invalidating session with user: {}", user);
+        LOGGER.debug("Invalidating session with user {} and id {}.", user, Session.get().getId());
         user = null;
-        for (final SessionInvalidator current : invalidators) {
-            current.invalidate((WebSession) WebSession.get());
-        }
+        runCustomInvalidators();
         super.invalidate();
     }
 
@@ -75,9 +80,13 @@ public class SecureSession extends WebSession {
     public void invalidateNow() {
         LOGGER.debug("Invalidating now session with user: {}", user);
         user = null;
+        runCustomInvalidators();
+        super.invalidateNow();
+    }
+
+    private void runCustomInvalidators() {
         for (final SessionInvalidator current : invalidators) {
             current.invalidate((WebSession) WebSession.get());
         }
-        super.invalidateNow();
     }
 }
