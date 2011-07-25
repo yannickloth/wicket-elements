@@ -33,10 +33,12 @@ public abstract class SecureWebApplication extends WebApplication {
 
     private IAuthorizationStrategy authorizationStrategy;
     private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener;
+    private SecurityCheck securityCheck;
 
-    public SecureWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedInstListenerParam) {
+    public SecureWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedInstListenerParam, final SecurityCheck securityCheckParam) {
         authorizationStrategy = authorizationStrategyParam;
         unauthorizedComponentInstantiationListener = unauthorizedInstListenerParam;
+        securityCheck = securityCheckParam;
     }
 
     public SecureWebApplication() {
@@ -58,5 +60,9 @@ public abstract class SecureWebApplication extends WebApplication {
     @Override
     public Session newSession(final Request request, final Response response) {
         return new SecureSession(request);
+    }
+
+    public SecurityCheck getSecurityCheck() {
+        return securityCheck;
     }
 }

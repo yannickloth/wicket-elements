@@ -18,76 +18,49 @@ package com.googlecode.wicketelements.security;
 
 import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.common.annotation.AnnotationHelper;
-import com.googlecode.wicketelements.security.annotations.*;
+import com.googlecode.wicketelements.security.annotations.EnableAction;
+import com.googlecode.wicketelements.security.annotations.InstantiateAction;
+import com.googlecode.wicketelements.security.annotations.RenderAction;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.*;
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
-import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Yannick LOTH
  */
-public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, IUnauthorizedComponentInstantiationListener {
+public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
 
-    private transient static final Logger LOGGER = LoggerFactory.getLogger(AnnotationAuthorizationStrategy.class);
+    private transient static final Logger LOGGER = LoggerFactory.getLogger("wicketelements.security");
+    private SecurityCheck securityCheck;
 
-    public AnnotationAuthorizationStrategy() {
+    public AnnotationAuthorizationStrategy(final SecurityCheck securityCheckParam) {
+        ParamRequirements.INSTANCE.requireNotNull(securityCheckParam);
+        securityCheck = securityCheckParam;
     }
 
-    private boolean isNotSignInOrSignOutPage(final Class<? extends Page> pageClassParam) {
-        return !pageClassParam.equals(signInPage())
-                && !pageClassParam.equals(signOutPage());
-    }
-
-    private boolean isErrorPage(final Class<? extends Page> pageClassParam) {
-        final IApplicationSettings settings = Application.get().getApplicationSettings();
-        return pageClassParam.isAssignableFrom(settings.getAccessDeniedPage())
-                || pageClassParam.isAssignableFrom(settings.getInternalErrorPage())
-                || pageClassParam.isAssignableFrom(settings.getPageExpiredErrorPage());
-    }
-
-    private boolean isSignInRequired() {
-        return AnnotationHelper.hasAnnotation(Application.get().getClass(), SignInRequired.class);
-    }
-
-    public Class<? extends Page> signInPage() {
-        Class<? extends Page> page = Application.get().getHomePage();
-        if (AnnotationHelper.hasAnnotation(Application.get().getClass(), SignIn.class)) {
-            final SignIn annot = AnnotationHelper.getAnnotation(Application.get().getClass(), SignIn.class);
-            page = annot.page();
-        }
-        return page;
-    }
-
-    public Class<? extends Page> signOutPage() {
-        Class<? extends Page> page = null;
-        if (AnnotationHelper.hasAnnotation(Application.get().getClass(), SignOut.class)) {
-            final SignOut annot = AnnotationHelper.getAnnotation(Application.get().getClass(), SignOut.class);
-            page = annot.page();
-        }
-        return page;
-    }
 
     public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClassParam) {
         LOGGER.debug("Checking if instantiation is authorized for {}", componentClassParam.getName());
         ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
-        if (isSignInRequired()) {
+        if (securityCheck.isSignInRequired()) {
             LOGGER.debug("Sign in is required.");
             if (!SecureSession.get().isAuthenticated()) {
                 LOGGER.debug("User is not authenticated.");
                 if (Page.class.isAssignableFrom(componentClassParam)) {
                     LOGGER.debug("Component is a Page.");
                     final Class<? extends Page> p = (Class<? extends Page>) componentClassParam;
-                    if (!isErrorPage(p) && isNotSignInOrSignOutPage(p)) {
-                        LOGGER.debug("Not an error, sign in or sign out page.");
+                    if (securityCheck.isErrorPage(p) || securityCheck.isSignInPage(p) || securityCheck.isSignOutPage(p)) {
+                        LOGGER.debug("Page is an error, sign in or sign out page.");
+                        return true;
+                    } else {
+                        //do not allow other pages to be instantiated if not signed in
                         return false;
                     }
-                }
+                } //if not a page, simply go on to see if the component has the instantiation rights
             }
         }
         if (AnnotationHelper.hasAnnotation(componentClassParam, InstantiateAction.class)) { //permission check required
@@ -100,7 +73,7 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, 
             if (SecureSession.get().isAuthenticated()) {
                 LOGGER.debug("User authenticated");
                 final IUser user = SecureSession.get().getUser();
-                return (user != null && user.hasPermission(permission));
+                return (user.hasPermission(permission));
             } else {
                 return false;
             }
@@ -140,17 +113,5 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy, 
         return true;
     }
 
-    public void onUnauthorizedInstantiation(final Component componentParam) {
-        ParamRequirements.INSTANCE.requireNotNull(componentParam);
-        if (!SecureSession.get().isAuthenticated()) {
-            LOGGER.debug("Unauthorized and user not authenticated.");
-            if (signInPage() != Application.get().getHomePage()) {
-                LOGGER.debug("Setting sign in page as response.");
-                throw new RestartResponseAtInterceptPageException(signInPage());
-            }
-        }
-        LOGGER.debug("Setting access denied page as response.");
-        throw new RestartResponseException(WebApplication.get().getApplicationSettings().getAccessDeniedPage());
 
-    }
 }

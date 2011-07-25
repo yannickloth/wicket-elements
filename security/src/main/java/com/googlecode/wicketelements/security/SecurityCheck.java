@@ -16,12 +16,14 @@
  */
 package com.googlecode.wicketelements.security;
 
-/**
- *
- * @author Yannick LOTH
- */
-public interface IAuthenticationStrategy {
 
-    static final IAuthenticationStrategy ALLOW_ALL = new IAuthenticationStrategy() {
-    };
+import org.apache.wicket.Page;
+
+public interface SecurityCheck {
+    Class<? extends Page> signInPage();
+    Class<? extends Page> signOutPage();
+    boolean isSignInRequired();
+    boolean isErrorPage(final Class<? extends Page> pageClassParam);
+    boolean isSignInPage(final Class<? extends Page> pageClassParam);
+    boolean isSignOutPage(final Class<? extends Page> pageClassParam);
 }

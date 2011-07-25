@@ -17,6 +17,7 @@
 package com.googlecode.wicketelements.security.shiro;
 
 import com.googlecode.wicketelements.security.SecureWebApplication;
+import com.googlecode.wicketelements.security.SecurityCheck;
 import com.googlecode.wicketelements.security.SessionInvalidator;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.wicket.*;
@@ -41,8 +42,8 @@ public abstract class ShiroWebApplication extends SecureWebApplication {
     public ShiroWebApplication() {
     }
 
-    protected ShiroWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedInstListenerParam, final SecurityManager securityManagerParam) {
-        super(authorizationStrategyParam, unauthorizedInstListenerParam);
+    protected ShiroWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedInstListenerParam, final SecurityCheck securityCheckParam, final SecurityManager securityManagerParam) {
+        super(authorizationStrategyParam, unauthorizedInstListenerParam, securityCheckParam);
         securityManager = securityManagerParam;
     }
 
