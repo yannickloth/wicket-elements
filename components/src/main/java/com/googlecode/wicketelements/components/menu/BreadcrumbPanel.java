@@ -16,10 +16,7 @@
  */
 package com.googlecode.wicketelements.components.menu;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -28,8 +25,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * 
  * @author Yannick LOTH
  */
 public class BreadcrumbPanel extends Panel {
@@ -104,6 +104,7 @@ public class BreadcrumbPanel extends Panel {
                             languageLabel.setRenderBodyOnly(true);
                             link.add(languageLabel);
                         }
+                        link.add(AttributeModifierFactory.newAttributeAppenderForTitle(getString(pageClass.getCanonicalName())));
                         item.add(link);
                     }
                     item.setOutputMarkupId(true);
@@ -120,18 +121,16 @@ public class BreadcrumbPanel extends Panel {
      * This method is executed when the link to the current locale is added to
      * the page. It may be useful, for example, to disable the link, as the
      * locale is already selected, or to add some attribute to the tag.
-     * 
-     * @param pageLink
-     *            The link for the current page.
+     *
+     * @param pageLink The link for the current page.
      */
     protected void onCurrentPageLink(final Link<Class<Page>> pageLink) {
     }
 
     /**
      * This method is executed when the link to a locale is added to the page.
-     * 
-     * @param pageLink
-     *            The link for the specific page.
+     *
+     * @param pageLink The link for the specific page.
      */
     protected void onPageLink(final Link<Class<Page>> pageLink) {
     }
