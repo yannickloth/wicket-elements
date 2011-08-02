@@ -42,7 +42,7 @@ public class Module extends Border {
             public Object getObject() {
                 return expanded ? "displayBlock" : "displayNone";
             }
-        }, ";"));
+        }, " "));
         headerLink.add(new Label("title", titleModelParam));
         add(headerLink);
     }
