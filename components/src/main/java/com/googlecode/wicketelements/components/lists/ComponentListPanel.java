@@ -36,7 +36,7 @@ public class ComponentListPanel extends Panel {
     }
 
     private final void init(final ComponentListModel componentListModelParam) {
-        add(new ListView<Component>("componentList", componentListModelParam) {
+        final ListView<Component> listView = new ListView<Component>("componentList", componentListModelParam) {
             @Override
             protected void populateItem(final ListItem<Component> itemParam) {
                 final Component component = itemParam.getModelObject();
@@ -51,7 +51,8 @@ public class ComponentListPanel extends Panel {
                     onLastItem(itemParam);
                 }
             }
-        });
+        };
+        add(listView);
     }
 
     private boolean isFirstItem(final ListItem<Component> itemParam) {
