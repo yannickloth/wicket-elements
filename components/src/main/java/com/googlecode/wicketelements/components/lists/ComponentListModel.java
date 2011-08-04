@@ -25,5 +25,5 @@ import java.util.List;
  * Model class for the {@code ComponentListPanel}.
  * The list of components may be set dynamically, as this model extends {@code LoadableDetachableModel}.
  */
-public abstract class ComponentListModel extends LoadableDetachableModel<List<? extends Component>> {
+public abstract class ComponentListModel<T extends List<? extends Component>> extends LoadableDetachableModel<T> {
 }

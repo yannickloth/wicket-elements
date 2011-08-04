@@ -26,7 +26,6 @@ import org.apache.wicket.util.lang.Objects;
 /**
  * This panel renders a list of components.  It's very useful when the quantity of components you want to render is set
  * dynamically, as you don't have to write a HTML tag placeholder with it's Wicket identifier for each component.
- *
  */
 public class ComponentListPanel extends Panel {
     public static final String LIST_ELEMENT_WICKET_ID = "component";
@@ -36,15 +35,39 @@ public class ComponentListPanel extends Panel {
         init(componentListModelParam);
     }
 
-    private void init(final ComponentListModel componentListModelParam) {
-        add(new ListView("componentList", componentListModelParam) {
+    private final void init(final ComponentListModel componentListModelParam) {
+        add(new ListView<Component>("componentList", componentListModelParam) {
             @Override
-            protected void populateItem(final ListItem item) {
-                final Component component = (Component) item.getModelObject();
+            protected void populateItem(final ListItem<Component> itemParam) {
+                final Component component = itemParam.getModelObject();
                 PreCondition.INSTANCE.requireNotBlank(component.getId(), "The ComponentList elements must have an id which is not blank.");
                 PreCondition.INSTANCE.requireTrue(Objects.equal(LIST_ELEMENT_WICKET_ID, component.getId()), "The ComponentList elements must have the id: " + LIST_ELEMENT_WICKET_ID);
-                item.add(component);
+                itemParam.add(component);
+                onItem(itemParam);
+                if (isFirstItem(itemParam)) {
+                    onFirstItem(itemParam);
+                }
+                if (isLastItem(itemParam)) {
+                    onLastItem(itemParam);
+                }
             }
         });
+    }
+
+    private boolean isFirstItem(final ListItem<Component> itemParam) {
+        return true;
+    }
+
+    private boolean isLastItem(final ListItem<Component> itemParam) {
+        return true;
+    }
+
+    protected void onItem(final ListItem<Component> itemParam) {
+    }
+
+    protected void onFirstItem(final ListItem<Component> itemParam) {
+    }
+
+    protected void onLastItem(final ListItem<Component> itemParam) {
     }
 }
