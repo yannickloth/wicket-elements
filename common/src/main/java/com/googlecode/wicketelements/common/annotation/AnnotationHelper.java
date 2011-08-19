@@ -52,7 +52,7 @@ public final class AnnotationHelper {
         INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotation type, but is not.");
         final Annotation[] annotations = classParam.getAnnotations();
         for (final Annotation annotation : annotations) {
-            if (isQualidfiedAnnotation(annotation.getClass(), annotationQualifierClass)) {
+            if (isQualifiedAnnotation(annotation.getClass(), annotationQualifierClass)) {
                 return true;
             }
         }
@@ -66,7 +66,7 @@ public final class AnnotationHelper {
      * @param annotationQualifierClassParam The annotation that may qualify other annotations.
      * @return {@code true} if the annotation is qualified, {@code false} else.
      */
-    public static boolean isQualidfiedAnnotation(final Class<? extends Annotation> annotationClassParam, final Class<? extends Annotation> annotationQualifierClassParam) {
+    public static boolean isQualifiedAnnotation(final Class<? extends Annotation> annotationClassParam, final Class<? extends Annotation> annotationQualifierClassParam) {
         final Class<?>[] interfaces = annotationClassParam.getInterfaces();
         for (final Class<?> current : interfaces) {
             if (current.isAnnotationPresent(annotationQualifierClassParam)) {
@@ -93,7 +93,7 @@ public final class AnnotationHelper {
         final List<Annotation> qualifiedAnnotations = new ArrayList<Annotation>();
         final Annotation[] annotations = classParam.getAnnotations();
         for (final Annotation annotation : annotations) {
-            if (annotation.getClass().isAnnotationPresent(annotationQualifierClass)) {
+            if (isQualifiedAnnotation(annotation.getClass(),annotationQualifierClass)) {
                 qualifiedAnnotations.add(annotation);
             }
         }
