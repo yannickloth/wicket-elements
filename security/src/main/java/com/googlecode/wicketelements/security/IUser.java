@@ -17,7 +17,6 @@
 package com.googlecode.wicketelements.security;
 
 /**
- *
  * @author Yannick LOTH
  */
 public interface IUser {
@@ -29,11 +28,19 @@ public interface IUser {
         }
     };
 
+    public static final IUser NO_PERMISSIONS_USER = new IUser() {
+
+        public boolean hasPermission(String permission) {
+            return false;
+        }
+    };
+
     /**
      * To check if the current user has the specified permission.
+     *
      * @param permission The permission to check for.
      * @return Returns <code>true</code> if the current user has the specified
-     * permission, <code>false</code> else.
+     *         permission, <code>false</code> else.
      */
     boolean hasPermission(final String permission);
 }
