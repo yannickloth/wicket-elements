@@ -17,13 +17,31 @@
 package com.googlecode.wicketelements.security;
 
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Set;
+
 public interface SecurityCheck {
+    <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass);
+
+    boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam);
+
+    <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam);
+
+    boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam);
+
     Class<? extends Page> signInPage();
+
     Class<? extends Page> signOutPage();
+
     boolean isSignInRequired();
+
     boolean isErrorPage(final Class<? extends Page> pageClassParam);
+
     boolean isSignInPage(final Class<? extends Page> pageClassParam);
+
     boolean isSignOutPage(final Class<? extends Page> pageClassParam);
 }

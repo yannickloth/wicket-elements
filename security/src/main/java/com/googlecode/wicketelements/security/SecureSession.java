@@ -16,6 +16,7 @@
  */
 package com.googlecode.wicketelements.security;
 
+import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
@@ -54,7 +55,8 @@ public class SecureSession extends WebSession {
         return user;
     }
 
-    public void setUser(final IUser userParam) {
+    public void switchUser(final IUser userParam) {
+        ParamRequirements.INSTANCE.requireNotNull(userParam);
         user = userParam;
     }
 
@@ -71,7 +73,7 @@ public class SecureSession extends WebSession {
     @Override
     public void invalidate() {
         LOGGER.debug("Invalidating session with user {} and id {}.", user, Session.get().getId());
-        user = null;
+        user = IUser.ALL_PERMISSIONS_USER;
         runCustomInvalidators();
         super.invalidate();
     }
@@ -79,7 +81,7 @@ public class SecureSession extends WebSession {
     @Override
     public void invalidateNow() {
         LOGGER.debug("Invalidating now session with user: {}", user);
-        user = null;
+        user = IUser.ALL_PERMISSIONS_USER;
         runCustomInvalidators();
         super.invalidateNow();
     }

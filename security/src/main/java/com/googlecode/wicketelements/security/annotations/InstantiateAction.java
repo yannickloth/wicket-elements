@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface InstantiateAction {
-    String permission() default "";
+    String permission();
 
     String[] constraints() default {};
 }

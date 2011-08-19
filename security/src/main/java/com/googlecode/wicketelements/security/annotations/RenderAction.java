@@ -10,8 +10,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@ImpliesSecurityAction(impliedActions = InstantiateAction.class)
 public @interface RenderAction {
-    String permission() default "";
+    String permission();
 
     String[] constraints() default {};
 }

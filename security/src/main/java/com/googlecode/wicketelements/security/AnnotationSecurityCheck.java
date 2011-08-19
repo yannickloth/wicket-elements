@@ -18,14 +18,72 @@ package com.googlecode.wicketelements.security;
 
 import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.common.annotation.AnnotationHelper;
-import com.googlecode.wicketelements.security.annotations.SignIn;
-import com.googlecode.wicketelements.security.annotations.SignInRequired;
-import com.googlecode.wicketelements.security.annotations.SignOut;
+import com.googlecode.wicketelements.security.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.settings.IApplicationSettings;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class AnnotationSecurityCheck implements SecurityCheck {
+    public boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {
+        return AnnotationHelper.isQualifiedAnnotationPresent(componentClassParam, SecurityActionQualifier.class);
+    }
+
+    public boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam) {
+        final IUser user = SecureSession.get().getUser();
+        for (final String perm : permissionsParam) {
+            if (!StringUtils.isBlank(perm) && user.hasPermission(perm)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass) {
+        ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
+        ParamRequirements.INSTANCE.requireNotNull(actionAnnotationClass);
+        final Set<String> impliedPermissions = new HashSet<String>();
+        final List<Annotation> securityAnnotations = AnnotationHelper.getQualifiedAnnotations(componentClassParam, SecurityActionQualifier.class);
+        for (final Annotation securityAnnotation : securityAnnotations) {
+            if (impliesAction(securityAnnotation.getClass(), actionAnnotationClass)) {
+                if (securityAnnotation instanceof InstantiateAction) {
+                    final InstantiateAction action = (InstantiateAction) securityAnnotation;
+                    impliedPermissions.add(action.permission());
+                } else if (securityAnnotation instanceof RenderAction) {
+                    final RenderAction action = (RenderAction) securityAnnotation;
+                    impliedPermissions.add(action.permission());
+                } else if (securityAnnotation instanceof EnableAction) {
+                    final EnableAction action = (EnableAction) securityAnnotation;
+                    impliedPermissions.add(action.permission());
+                }
+            }
+        }
+        return impliedPermissions;
+    }
+
+    public <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
+        if (impliedParam.isAssignableFrom(annotationParam)) {
+            return true;
+        }
+        final Class<?>[] interfaces = annotationParam.getInterfaces();
+        for (final Class<?> current : interfaces) {
+            if (current.isAnnotationPresent(ImpliesSecurityAction.class)) {
+                final ImpliesSecurityAction a = current.getAnnotation(ImpliesSecurityAction.class);
+                for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
+                    return impliesAction(annotClass, impliedParam);
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isSignInPage(final Class<? extends Page> pageClassParam) {
         ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
         return pageClassParam.equals(signInPage());
@@ -45,13 +103,13 @@ public class AnnotationSecurityCheck implements SecurityCheck {
     }
 
     public boolean isSignInRequired() {
-        return AnnotationHelper.hasAnnotation(Application.get().getClass(), SignInRequired.class);
+        return Application.get().getClass().isAnnotationPresent(SignInRequired.class);
     }
 
     public Class<? extends Page> signInPage() {
         Class<? extends Page> page = Application.get().getHomePage();
-        if (AnnotationHelper.hasAnnotation(Application.get().getClass(), SignIn.class)) {
-            final SignIn annot = AnnotationHelper.getAnnotation(Application.get().getClass(), SignIn.class);
+        if (Application.get().getClass().isAnnotationPresent(SignIn.class)) {
+            final SignIn annot = Application.get().getClass().getAnnotation(SignIn.class);
             page = annot.page();
         }
         return page;
@@ -59,10 +117,27 @@ public class AnnotationSecurityCheck implements SecurityCheck {
 
     public Class<? extends Page> signOutPage() {
         Class<? extends Page> page = null;
-        if (AnnotationHelper.hasAnnotation(Application.get().getClass(), SignOut.class)) {
-            final SignOut annot = AnnotationHelper.getAnnotation(Application.get().getClass(), SignOut.class);
+        if (Application.get().getClass().isAnnotationPresent(SignOut.class)) {
+            final SignOut annot = Application.get().getClass().getAnnotation(SignOut.class);
             page = annot.page();
         }
         return page;
+    }
+
+    public boolean isImpliedAction(final Class<? extends Annotation> annotationParam, final Class<? extends Annotation> impliedParam) {
+        ParamRequirements.INSTANCE.requireNotNull(annotationParam);
+        ParamRequirements.INSTANCE.requireNotNull(impliedParam);
+        if (annotationParam.equals(impliedParam)) {
+            return true;
+        }
+        if (annotationParam.isAnnotationPresent(ImpliesSecurityAction.class)) {
+            final ImpliesSecurityAction a = annotationParam.getAnnotation(ImpliesSecurityAction.class);
+            for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
+                if (isImpliedAction(annotClass, impliedParam)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

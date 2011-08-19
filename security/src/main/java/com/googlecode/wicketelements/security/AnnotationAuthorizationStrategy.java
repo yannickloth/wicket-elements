@@ -17,17 +17,17 @@
 package com.googlecode.wicketelements.security;
 
 import com.googlecode.jbp.common.requirements.ParamRequirements;
-import com.googlecode.wicketelements.common.annotation.AnnotationHelper;
 import com.googlecode.wicketelements.security.annotations.EnableAction;
 import com.googlecode.wicketelements.security.annotations.InstantiateAction;
 import com.googlecode.wicketelements.security.annotations.RenderAction;
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * @author Yannick LOTH
@@ -63,24 +63,17 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
                 } //if not a page, simply go on to see if the component has the instantiation rights
             }
         }
-        if (AnnotationHelper.hasAnnotation(componentClassParam, InstantiateAction.class)) { //permission check required
-            final InstantiateAction action = AnnotationHelper.getAnnotation(componentClassParam, InstantiateAction.class);
-            final String permission = action.permission();
-            if (StringUtils.isBlank(permission)) {
-                return true;
+        if (securityCheck.isSecurityAnnotatedComponent(componentClassParam)) {
+            final Set<String> permissions = securityCheck.findImpliedPermissions(componentClassParam, InstantiateAction.class);
+            if (permissions.isEmpty()) {
+                throw new IllegalStateException("Component with security annotations but no permissions are found: " + componentClassParam.getName());
             }
-            LOGGER.debug("Instantiation permission: {}", permission);
-            if (SecureSession.get().isAuthenticated()) {
-                LOGGER.debug("User authenticated");
-                final IUser user = SecureSession.get().getUser();
-                return (user.hasPermission(permission));
-            } else {
-                return false;
-            }
+            return securityCheck.isOnePermissionGivenToUser(permissions);
         }
-        //no annotation so no permission check is required
+        //no annotations so no permission check is required
         return true;
     }
+
 
     public boolean isActionAuthorized(final Component componentParam, final Action actionParam) {
         ParamRequirements.INSTANCE.requireNotNull(componentParam);
@@ -90,16 +83,16 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
         if (user != null) {
             if (Component.RENDER.equals(actionParam)) {
                 LOGGER.debug("Action=RENDER");
-                if (AnnotationHelper.hasAnnotation(componentParam.getClass(), RenderAction.class)) {
-                    final RenderAction action = AnnotationHelper.getAnnotation(componentParam.getClass(), RenderAction.class);
+                if (componentParam.getClass().isAnnotationPresent(RenderAction.class)) {
+                    final RenderAction action = componentParam.getClass().getAnnotation(RenderAction.class);
                     final String permission = action.permission();
                     LOGGER.debug("RENDER permission: {}", permission);
                     return user.hasPermission(permission);
                 }
             } else if (Component.ENABLE.equals(actionParam)) {
                 LOGGER.debug("Action=ENABLE");
-                if (AnnotationHelper.hasAnnotation(componentParam.getClass(), EnableAction.class)) {
-                    final EnableAction action = AnnotationHelper.getAnnotation(componentParam.getClass(), EnableAction.class);
+                if (componentParam.getClass().isAnnotationPresent(EnableAction.class)) {
+                    final EnableAction action = componentParam.getClass().getAnnotation(EnableAction.class);
                     final String permission = action.permission();
                     LOGGER.debug("ENABLE permission: {}", permission);
                     //if parent is disabled, the component is also disabled if rendered
@@ -107,7 +100,7 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
                 }
             }
         } else {
-            LOGGER.debug("PermissionBase annotation not present, thus permission granted on action.");
+            LOGGER.debug("PermissionBase annotations not present, thus permission granted on action.");
             return true;
         }
         return true;
