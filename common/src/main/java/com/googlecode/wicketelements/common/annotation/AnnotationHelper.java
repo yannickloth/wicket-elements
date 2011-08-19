@@ -17,6 +17,12 @@
 package com.googlecode.wicketelements.common.annotation;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static com.googlecode.jbp.common.requirements.ParamRequirements.INSTANCE;
 
@@ -31,110 +37,66 @@ public final class AnnotationHelper {
     }
 
     /**
-     * Checks if the class or its superclass and interface hierarchies have the
-     * specified annotation.
+     * Checks if a class has specific qualified annotations (these annotations are, in turn, also annotated).
      *
-     * @param classParam      The class to check for the specified annotation.
-     * @param annotationClass The specified annotation.
-     * @return <code>true</code> if the class has the specified annotation,
-     *         <code>false</else>.
+     * @param classParam               The class that may have a qualified annotation.
+     * @param annotationQualifierClass The annotation that may qualifie the annotations on the class parameter.
+     * @return {@code true} if the class has a qualified annotation, {@code false} else.
      */
-    public static <A extends Annotation> boolean hasAnnotation(Class<?> classParam, final Class<A> annotationClass) {
-        return hasAnnotation(classParam, annotationClass, true, true);
-    }
-
-    /**
-     * Checks if the class has the specified annotation.
-     *
-     * @param classParam                   The class to check for the specified annotation.
-     * @param annotationClass              The specified annotation.
-     * @param recursivelyCheckInterfaces   <code>true</code> if the interface
-     *                                     hierarchy also has to be checked for the specified annotation.
-     * @param recursivelyCheckSuperClasses <code>true</code> if the superclass
-     *                                     hierarchy also has to be checked for the specified annotation.
-     * @return <code>true</code> if the class has the specified annotation,
-     *         <code>false</else>.
-     */
-    public static <A extends Annotation> boolean hasAnnotation(Class<?> classParam, final Class<A> annotationClass, final boolean recursivelyCheckSuperClasses, final boolean recursivelyCheckInterfaces) {
+    public static boolean isQualifiedAnnotationPresent(final Class<?> classParam, final Class<? extends Annotation> annotationQualifierClass) {
         INSTANCE.requireNotNull(classParam);
-        INSTANCE.requireNotNull(annotationClass);
-        if (!annotationClass.isAnnotation()) {
-            throw new IllegalArgumentException("Parameter 'annotationClass' must be the Class of an annotation type, but is not.");
-        }
-        if (classParam.getAnnotation(annotationClass) != null) {
-            return true;
-        }
-        if (recursivelyCheckSuperClasses) {
-            final Class superClass = classParam.getSuperclass();
-            if (superClass != null) {
-                return hasAnnotation(superClass, annotationClass, recursivelyCheckSuperClasses, recursivelyCheckInterfaces);
-            }
-        }
-        if (recursivelyCheckInterfaces) {
-            for (final Class<?> interfaceClass : classParam.getInterfaces()) {
-                if (hasAnnotation(interfaceClass, annotationClass, recursivelyCheckSuperClasses, recursivelyCheckInterfaces)) {
-                    return true;
-                }
+        INSTANCE.requireNotNull(annotationQualifierClass);
+        final Target targetAnnot = annotationQualifierClass.getAnnotation(Target.class);
+        final ElementType[] elementTypes = targetAnnot.value();
+        INSTANCE.requireTrue(Arrays.asList(elementTypes).contains(ElementType.ANNOTATION_TYPE), "The specified annotation qualifier class must have the target element type ANNOTATION_TYPE, but does not.");
+        INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotation type, but is not.");
+        final Annotation[] annotations = classParam.getAnnotations();
+        for (final Annotation annotation : annotations) {
+            if (isQualidfiedAnnotation(annotation.getClass(), annotationQualifierClass)) {
+                return true;
             }
         }
         return false;
     }
 
     /**
-     * Gets the specified annotation from the class or it supertype hierarchies.
+     * Checks if the annotation is qualified by another annotation.
      *
-     * @param <A>
-     * @param classParam      The class to check for the specified annotation.
-     * @param annotationClass The specified annotation to return.
-     * @return Returns the specified annotation or <code>null</code> if none
-     *         found.
+     * @param annotationClassParam          The annotation that may be qualified.
+     * @param annotationQualifierClassParam The annotation that may qualify other annotations.
+     * @return {@code true} if the annotation is qualified, {@code false} else.
      */
-    public static <A extends Annotation> A getAnnotation(Class classParam, final Class<A> annotationClass) {
-        return getAnnotation(classParam, annotationClass, true, true);
+    public static boolean isQualidfiedAnnotation(final Class<? extends Annotation> annotationClassParam, final Class<? extends Annotation> annotationQualifierClassParam) {
+        final Class<?>[] interfaces = annotationClassParam.getInterfaces();
+        for (final Class<?> current : interfaces) {
+            if (current.isAnnotationPresent(annotationQualifierClassParam)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * Gets the specified annotation from the class or it supertype hierarchies.
+     * Returns all qualified annotations of the specified class.
      *
-     * @param <A>
-     * @param classParam                   The class to check for the specified annotation.
-     * @param annotationClass              The specified annotation to return.
-     * @param recursivelyCheckInterfaces   <code>true</code> if the interface
-     *                                     hierarchy also has to be checked for the specified annotation.
-     * @param recursivelyCheckSuperClasses <code>true</code> if the superclass
-     *                                     hierarchy also has to be checked for the specified annotation.
-     * @return Returns the specified annotation or <code>null</code> if none
-     *         found.
+     * @param classParam               The class that may have qualified annotations.
+     * @param annotationQualifierClass The class of the annotation that may qualify other annotations.
+     * @return A {@code List<Annotation>} with all found qualified annotations on the class.  May be an empty list, but must not be {@code null}.
      */
-    public static <A extends Annotation> A getAnnotation(Class classParam, final Class<A> annotationClass, final boolean recursivelyCheckSuperClasses, final boolean recursivelyCheckInterfaces) {
+    public static List<Annotation> getQualifiedAnnotations(final Class<?> classParam, final Class<? extends Annotation> annotationQualifierClass) {
         INSTANCE.requireNotNull(classParam);
-        INSTANCE.requireNotNull(annotationClass);
-        if (!annotationClass.isAnnotation()) {
-            throw new IllegalArgumentException("Parameter 'annotationClass' must be the Class of an annotation type, but is not.");
-        }
-        {
-            final A annot = (A) classParam.getAnnotation(annotationClass);
-            if (annot != null) {
-                return annot;
+        INSTANCE.requireNotNull(annotationQualifierClass);
+        final Target targetAnnot = annotationQualifierClass.getAnnotation(Target.class);
+        final ElementType[] elementTypes = targetAnnot.value();
+        INSTANCE.requireTrue(Arrays.asList(elementTypes).contains(ElementType.ANNOTATION_TYPE), "The specified annotation qualifier class must have the target element type ANNOTATION_TYPE, but does not.");
+        INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotation type, but is not.");
+        final List<Annotation> qualifiedAnnotations = new ArrayList<Annotation>();
+        final Annotation[] annotations = classParam.getAnnotations();
+        for (final Annotation annotation : annotations) {
+            if (annotation.getClass().isAnnotationPresent(annotationQualifierClass)) {
+                qualifiedAnnotations.add(annotation);
             }
         }
-        if (recursivelyCheckSuperClasses) {
-            final Class superClass = classParam.getSuperclass();
-            if (superClass != null) {
-                final A annot = getAnnotation(superClass, annotationClass, recursivelyCheckSuperClasses, recursivelyCheckInterfaces);
-                if (annot != null) {
-                    return annot;
-                }
-            }
-        }
-        if (recursivelyCheckInterfaces) {
-            for (final Class<?> interfaceClass : classParam.getInterfaces()) {
-                final A annot = getAnnotation(interfaceClass, annotationClass, recursivelyCheckSuperClasses, recursivelyCheckInterfaces);
-                if (annot != null) {
-                    return annot;
-                }
-            }
-        }
-        return null;
+        return Collections.unmodifiableList(qualifiedAnnotations);
     }
 }
