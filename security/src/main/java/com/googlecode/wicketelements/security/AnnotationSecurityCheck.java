@@ -16,8 +16,7 @@
  */
 package com.googlecode.wicketelements.security;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
-import com.googlecode.wicketelements.common.annotation.AnnotationHelper;
+import com.googlecode.jbp.common.annotations.AnnotationHelper;
 import com.googlecode.wicketelements.security.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
@@ -27,6 +26,8 @@ import org.apache.wicket.settings.IApplicationSettings;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 public class AnnotationSecurityCheck implements SecurityCheck {
     private <T extends Component, A extends Annotation> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForAction(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam) {
@@ -77,8 +78,8 @@ public class AnnotationSecurityCheck implements SecurityCheck {
     }
 
     public final <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass) {
-        ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
-        ParamRequirements.INSTANCE.requireNotNull(actionAnnotationClass);
+        PARAM_REQ.Object.requireNotNull(componentClassParam, "Component class must not be null.");
+        PARAM_REQ.Object.requireNotNull(actionAnnotationClass, "Action annotation class must not be null.");
         final Set<String> impliedPermissions = new HashSet<String>();
         final List<Annotation> securityAnnotations = AnnotationHelper.getQualifiedAnnotations(componentClassParam, SecurityActionQualifier.class);
         for (final Annotation securityAnnotation : securityAnnotations) {
@@ -122,17 +123,17 @@ public class AnnotationSecurityCheck implements SecurityCheck {
     }
 
     public final boolean isSignInPage(final Class<? extends Page> pageClassParam) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
+        PARAM_REQ.Object.requireNotNull(pageClassParam, "Sign in page parameter must not be null.");
         return pageClassParam.equals(signInPage());
     }
 
     public final boolean isSignOutPage(final Class<? extends Page> pageClassParam) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
+        PARAM_REQ.Object.requireNotNull(pageClassParam, "Sign out page parameter must not be null.");
         return pageClassParam.equals(signOutPage());
     }
 
     public final boolean isErrorPage(final Class<? extends Page> pageClassParam) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
+        PARAM_REQ.Object.requireNotNull(pageClassParam, "Eror page parameter must not be null.");
         final IApplicationSettings settings = Application.get().getApplicationSettings();
         return pageClassParam.isAssignableFrom(settings.getAccessDeniedPage())
                 || pageClassParam.isAssignableFrom(settings.getInternalErrorPage())
@@ -181,8 +182,8 @@ public class AnnotationSecurityCheck implements SecurityCheck {
     }
 
     public final boolean isImpliedAction(final Class<? extends Annotation> annotationParam, final Class<? extends Annotation> impliedParam) {
-        ParamRequirements.INSTANCE.requireNotNull(annotationParam);
-        ParamRequirements.INSTANCE.requireNotNull(impliedParam);
+        PARAM_REQ.Object.requireNotNull(annotationParam, "Action annotation class must not be null.");
+        PARAM_REQ.Object.requireNotNull(impliedParam, "Implied action annotation class must not be null.");
         if (annotationParam.equals(impliedParam)) {
             return true;
         }
