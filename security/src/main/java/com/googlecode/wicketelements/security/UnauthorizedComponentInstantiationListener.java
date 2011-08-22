@@ -18,7 +18,6 @@ package com.googlecode.wicketelements.security;
 
 
 import com.googlecode.jbp.common.requirements.ParamRequirements;
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.RestartResponseException;
@@ -41,8 +40,8 @@ public class UnauthorizedComponentInstantiationListener implements IUnauthorized
         ParamRequirements.INSTANCE.requireNotNull(componentParam);
         if (!SecureSession.get().isAuthenticated()) {
             LOGGER.debug("Unauthorized and user not authenticated.");
-            if (securityCheck.signInPage() != Application.get().getHomePage()) {
-                LOGGER.debug("Setting sign in page as response.");
+            if (securityCheck.isApplicationWithSignInPageSpecified()) {
+                LOGGER.debug("Application has a sign in page specified. Setting sign in page as response.");
                 throw new RestartResponseAtInterceptPageException(securityCheck.signInPage());
             }
         }

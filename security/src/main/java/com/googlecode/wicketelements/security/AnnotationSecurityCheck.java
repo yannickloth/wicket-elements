@@ -117,6 +117,14 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return Application.get().getClass().isAnnotationPresent(SignInRequired.class);
     }
 
+    public final boolean isApplicationWithSignInPageSpecified() {
+        if (Application.get().getClass().isAnnotationPresent(SignIn.class)) {
+            final SignIn annot = Application.get().getClass().getAnnotation(SignIn.class);
+            return (annot.page() != null);
+        }
+        return false;
+    }
+
     public final Class<? extends Page> signInPage() {
         Class<? extends Page> page = Application.get().getHomePage();
         if (Application.get().getClass().isAnnotationPresent(SignIn.class)) {

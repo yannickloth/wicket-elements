@@ -27,6 +27,8 @@ import java.util.Set;
 public interface SecurityCheck {
     <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass);
 
+    boolean isApplicationWithSignInPageSpecified();
+
     boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam);
 
     <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam);
