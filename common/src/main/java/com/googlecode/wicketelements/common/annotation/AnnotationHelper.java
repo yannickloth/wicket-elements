@@ -16,6 +16,8 @@
  */
 package com.googlecode.wicketelements.common.annotation;
 
+import com.googlecode.jbp.common.requirements.ParamRequirements;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -23,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static com.googlecode.jbp.common.requirements.ParamRequirements.INSTANCE;
 
 /**
  * Provides utility methods process annotations.
@@ -44,12 +44,12 @@ public final class AnnotationHelper {
      * @return {@code true} if the class has a qualified annotations, {@code false} else.
      */
     public static boolean isQualifiedAnnotationPresent(final Class<?> classParam, final Class<? extends Annotation> annotationQualifierClass) {
-        INSTANCE.requireNotNull(classParam);
-        INSTANCE.requireNotNull(annotationQualifierClass);
+        ParamRequirements.INSTANCE.requireNotNull(classParam, "The class that may be annotated must not be null.");
+        ParamRequirements.INSTANCE.requireNotNull(annotationQualifierClass, "The qualifying annotation's class must not be null.");
         final Target targetAnnot = annotationQualifierClass.getAnnotation(Target.class);
         final ElementType[] elementTypes = targetAnnot.value();
-        INSTANCE.requireTrue(Arrays.asList(elementTypes).contains(ElementType.ANNOTATION_TYPE), "The specified annotations qualifier class must have the target element type ANNOTATION_TYPE, but does not.");
-        INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotations type, but is not.");
+        ParamRequirements.INSTANCE.requireTrue(Arrays.asList(elementTypes).contains(ElementType.ANNOTATION_TYPE), "The specified annotations qualifier class must have the target element type ANNOTATION_TYPE, but does not.");
+        ParamRequirements.INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotations type, but is not.");
         final Annotation[] annotations = classParam.getAnnotations();
         for (final Annotation annotation : annotations) {
             if (isQualifiedAnnotation(annotation.getClass(), annotationQualifierClass)) {
@@ -67,6 +67,11 @@ public final class AnnotationHelper {
      * @return {@code true} if the annotations is qualified, {@code false} else.
      */
     public static boolean isQualifiedAnnotation(final Class<? extends Annotation> annotationClassParam, final Class<? extends Annotation> annotationQualifierClassParam) {
+        ParamRequirements.INSTANCE.requireNotNull(annotationClassParam, "Qualified annotation's class parameter must not be null.");
+        ParamRequirements.INSTANCE.requireNotNull(annotationQualifierClassParam, "Qualifying annotation's class parameter must not be null.");
+        if (annotationClassParam.isAnnotationPresent(annotationQualifierClassParam)) {
+            return true;
+        }
         final Class<?>[] interfaces = annotationClassParam.getInterfaces();
         for (final Class<?> current : interfaces) {
             if (current.isAnnotationPresent(annotationQualifierClassParam)) {
@@ -84,16 +89,16 @@ public final class AnnotationHelper {
      * @return A {@code List<Annotation>} with all found qualified annotations on the class.  May be an empty list, but must not be {@code null}.
      */
     public static List<Annotation> getQualifiedAnnotations(final Class<?> classParam, final Class<? extends Annotation> annotationQualifierClass) {
-        INSTANCE.requireNotNull(classParam);
-        INSTANCE.requireNotNull(annotationQualifierClass);
+        ParamRequirements.INSTANCE.requireNotNull(classParam, "The annotated class must not be null.");
+        ParamRequirements.INSTANCE.requireNotNull(annotationQualifierClass, "The qualifying annotation class must not be null.");
         final Target targetAnnot = annotationQualifierClass.getAnnotation(Target.class);
         final ElementType[] elementTypes = targetAnnot.value();
-        INSTANCE.requireTrue(Arrays.asList(elementTypes).contains(ElementType.ANNOTATION_TYPE), "The specified annotations qualifier class must have the target element type ANNOTATION_TYPE, but does not.");
-        INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotations type, but is not.");
+        ParamRequirements.INSTANCE.requireTrue(Arrays.asList(elementTypes).contains(ElementType.ANNOTATION_TYPE), "The specified annotations qualifier class must have the target element type ANNOTATION_TYPE, but does not.");
+        ParamRequirements.INSTANCE.requireTrue(annotationQualifierClass.isAnnotation(), "Parameter 'annotationQualifierClass' must be the Class of an annotations type, but is not.");
         final List<Annotation> qualifiedAnnotations = new ArrayList<Annotation>();
         final Annotation[] annotations = classParam.getAnnotations();
         for (final Annotation annotation : annotations) {
-            if (isQualifiedAnnotation(annotation.getClass(),annotationQualifierClass)) {
+            if (isQualifiedAnnotation(annotation.getClass(), annotationQualifierClass)) {
                 qualifiedAnnotations.add(annotation);
             }
         }
