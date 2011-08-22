@@ -32,11 +32,11 @@ import java.util.List;
 import java.util.Set;
 
 public class AnnotationSecurityCheck implements SecurityCheck {
-    public boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {
+    public final boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {
         return AnnotationHelper.isQualifiedAnnotationPresent(componentClassParam, SecurityActionQualifier.class);
     }
 
-    public boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam) {
+    public final boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam) {
         final IUser user = SecureSession.get().getUser();
         for (final String perm : permissionsParam) {
             if (!StringUtils.isBlank(perm) && user.hasPermission(perm)) {
@@ -46,7 +46,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return false;
     }
 
-    public <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass) {
+    public final <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass) {
         ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
         ParamRequirements.INSTANCE.requireNotNull(actionAnnotationClass);
         final Set<String> impliedPermissions = new HashSet<String>();
@@ -68,7 +68,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return impliedPermissions;
     }
 
-    public <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
+    public final <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
         if (impliedParam.isAssignableFrom(annotationParam)) {
             return true;
         }
@@ -84,29 +84,40 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return false;
     }
 
-    public boolean isSignInPage(final Class<? extends Page> pageClassParam) {
+    public final boolean isSignInPage(final Class<? extends Page> pageClassParam) {
         ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
         return pageClassParam.equals(signInPage());
     }
 
-    public boolean isSignOutPage(final Class<? extends Page> pageClassParam) {
+    public final boolean isSignOutPage(final Class<? extends Page> pageClassParam) {
         ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
         return pageClassParam.equals(signOutPage());
     }
 
-    public boolean isErrorPage(final Class<? extends Page> pageClassParam) {
+    public final boolean isErrorPage(final Class<? extends Page> pageClassParam) {
         ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
         final IApplicationSettings settings = Application.get().getApplicationSettings();
         return pageClassParam.isAssignableFrom(settings.getAccessDeniedPage())
                 || pageClassParam.isAssignableFrom(settings.getInternalErrorPage())
-                || pageClassParam.isAssignableFrom(settings.getPageExpiredErrorPage());
+                || pageClassParam.isAssignableFrom(settings.getPageExpiredErrorPage()) || isComplementaryErrorPage(pageClassParam);
     }
 
-    public boolean isSignInRequired() {
+    /**
+     * This method may be overridden to check if a page is a custom complementary error page.  For example, these pages
+     * may be shown in case of specific exceptions.
+     *
+     * @param pageClassParam The page.
+     * @return {@code true} if the page is a custom complementary error page, {@code false} else.
+     */
+    protected boolean isComplementaryErrorPage(final Class<? extends Page> pageClassParam) {
+        return false;
+    }
+
+    public final boolean isSignInRequired() {
         return Application.get().getClass().isAnnotationPresent(SignInRequired.class);
     }
 
-    public Class<? extends Page> signInPage() {
+    public final Class<? extends Page> signInPage() {
         Class<? extends Page> page = Application.get().getHomePage();
         if (Application.get().getClass().isAnnotationPresent(SignIn.class)) {
             final SignIn annot = Application.get().getClass().getAnnotation(SignIn.class);
@@ -115,7 +126,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return page;
     }
 
-    public Class<? extends Page> signOutPage() {
+    public final Class<? extends Page> signOutPage() {
         Class<? extends Page> page = null;
         if (Application.get().getClass().isAnnotationPresent(SignOut.class)) {
             final SignOut annot = Application.get().getClass().getAnnotation(SignOut.class);
@@ -124,7 +135,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return page;
     }
 
-    public boolean isImpliedAction(final Class<? extends Annotation> annotationParam, final Class<? extends Annotation> impliedParam) {
+    public final boolean isImpliedAction(final Class<? extends Annotation> annotationParam, final Class<? extends Annotation> impliedParam) {
         ParamRequirements.INSTANCE.requireNotNull(annotationParam);
         ParamRequirements.INSTANCE.requireNotNull(impliedParam);
         if (annotationParam.equals(impliedParam)) {
