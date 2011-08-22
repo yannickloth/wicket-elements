@@ -17,7 +17,6 @@
 package com.googlecode.wicketelements.security.shiro;
 
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.security.IUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.permission.WildcardPermission;
@@ -26,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * @author Yannick LOTH
@@ -39,7 +40,7 @@ public class ShiroUser implements IUser, Serializable {
     }
 
     public boolean hasPermission(final String permission) {
-        ParamRequirements.INSTANCE.requireNotBlank(permission);
+        PARAM_REQ.String.requireNotBlank(permission, "The permission that is checked for the current user must not be null.");
         LOGGER.debug("Check for permission: {}", permission);
         final Subject currentUser = SecurityUtils.getSubject();
         LOGGER.debug("Current user: {}", currentUser.getPrincipal().toString());
