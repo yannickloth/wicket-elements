@@ -1,6 +1,5 @@
 package com.googlecode.wicketelements.components.module;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -12,13 +11,15 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
+
 public class Module extends Border {
     private boolean expanded = true;
     private WebMarkupContainer content;
 
     public Module(final String id, final IModel<?> titleModelParam) {
         super(id, titleModelParam);
-        ParamRequirements.INSTANCE.requireNotNull(titleModelParam, "A module must have a title model.  Parameter 'titleModelParam' must not be null.");
+        PARAM_REQ.Object.requireNotNull(titleModelParam, "A module must have a title model.  Parameter 'titleModelParam' must not be null.");
         init(titleModelParam);
     }
 

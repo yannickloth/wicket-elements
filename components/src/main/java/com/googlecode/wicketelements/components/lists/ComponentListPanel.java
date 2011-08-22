@@ -16,12 +16,13 @@
  */
 package com.googlecode.wicketelements.components.lists;
 
-import com.googlecode.jbp.common.requirements.PreCondition;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.lang.Objects;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PRE_COND;
 
 /**
  * This panel renders a list of components.  It's very useful when the quantity of components you want to render is set
@@ -40,8 +41,8 @@ public class ComponentListPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<Component> itemParam) {
                 final Component component = itemParam.getModelObject();
-                PreCondition.INSTANCE.requireNotBlank(component.getId(), "The ComponentList elements must have an id which is not blank.");
-                PreCondition.INSTANCE.requireTrue(Objects.equal(LIST_ELEMENT_WICKET_ID, component.getId()), "The ComponentList elements must have the id: " + LIST_ELEMENT_WICKET_ID);
+                PRE_COND.String.requireNotBlank(component.getId(), "The ComponentList elements must have an id which is not blank.");
+                PRE_COND.Logic.requireTrue(Objects.equal(LIST_ELEMENT_WICKET_ID, component.getId()), "The ComponentList elements must have the id: " + LIST_ELEMENT_WICKET_ID);
                 itemParam.add(component);
                 onItem(itemParam);
                 if (isFirstItem(itemParam)) {

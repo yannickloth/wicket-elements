@@ -16,12 +16,13 @@
  */
 package com.googlecode.wicketelements.components.menu;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Page;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * Class that represents a Wicket page tree (hierarchy).  Used to show
@@ -40,14 +41,14 @@ public class PageTree {
     }
 
     public PageTree(final Class<? extends Page> pageClassParam) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
+        PARAM_REQ.Object.requireNotNull(pageClassParam, "Page class parameter must not be null.");
         pageClass = pageClassParam;
         addToMap(pageMap);
     }
 
     public PageTree(final Class<? extends Page> pageClassParam, final List<PageTree> childrenParam) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
-        ParamRequirements.INSTANCE.requireNotNull(childrenParam);
+        PARAM_REQ.Object.requireNotNull(pageClassParam, "Page class parameter must not be null.");
+        PARAM_REQ.Object.requireNotNull(childrenParam, "Childre trees list must not be null.");
         pageClass = pageClassParam;
         children = childrenParam;
         if (childrenParam != null) {
@@ -59,7 +60,7 @@ public class PageTree {
     }
 
     public PageTree(final List<PageTree> childrenParam) {
-        ParamRequirements.INSTANCE.requireNotNull(childrenParam);
+        PARAM_REQ.Object.requireNotNull(childrenParam, "Children trees list must not be null.");
         children = childrenParam;
         addToMap(pageMap);
     }
@@ -76,7 +77,7 @@ public class PageTree {
     }
 
     public PageTree getPageTree(final Class<? extends Page> pageClass) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClass);
+        PARAM_REQ.Object.requireNotNull(pageClass, "Page class parameter must not be null.");
         return pageMap.get(pageClass);
     }
 

@@ -16,9 +16,10 @@
  */
 package com.googlecode.wicketelements.components.menu;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Page;
 import org.apache.wicket.model.IModel;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * Model which contains a <code>Class&lt;Page&gt;</code>.  Used in navigation menus.
@@ -31,7 +32,7 @@ public class PageModel implements IModel<Class<Page>> {
     private Class<Page> pageClass;
 
     public PageModel(final Class<Page> pageClassParam) {
-        ParamRequirements.INSTANCE.requireNotNull(pageClassParam);
+        PARAM_REQ.Object.requireNotNull(pageClassParam, "Page class parameter must not be null.");
         pageClass = pageClassParam;
     }
 

@@ -16,7 +16,6 @@
  */
 package com.googlecode.wicketelements.components.locale;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.basic.Label;
@@ -27,6 +26,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.StringResourceModel;
 
 import java.util.Locale;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * Panel that renders a list of locale links which, once clicked, change the
@@ -64,8 +65,8 @@ public class LanguagesPanel extends Panel {
     }
 
     private void populateRepeatingView(final LocalesListModel locales) {
-        ParamRequirements.INSTANCE.requireNotNull(locales);
-        ParamRequirements.INSTANCE.requireNotNull(locales.getObject());
+        PARAM_REQ.Object.requireNotNull(locales, "The locales list parameter must not be null.");
+        PARAM_REQ.Object.requireNotNull(locales.getObject(), "The locales model object must not be null.");
         final ListView<Locale> lv = new ListView<Locale>("languages",
                 locales.getObject()) {
 

@@ -17,12 +17,13 @@
 package com.googlecode.wicketelements.library.behavior;
 
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.Model;
 
 /**
  * Factory to create an attribute appender for the attribute <code>class</code>.
+ *
  * @author Yannick LOTH
  */
 public final class AttributeAppenderFactory {
@@ -35,11 +36,12 @@ public final class AttributeAppenderFactory {
 
     /**
      * Instanciates a new attribute appender for the attribute <code>class</code>.
+     *
      * @param cssClassNameParam The name of the CSS class to add to the tag. Must not be blank.
      * @return The new attribute appender.
      */
     public static AttributeAppender newAttributeAppenderForClass(final String cssClassNameParam) {
-        ParamRequirements.INSTANCE.requireNotBlank(cssClassNameParam);
+        PARAM_REQ.String.requireNotBlank(cssClassNameParam, "The CSS class name parameter must not be null.");
         return new AttributeAppender(CLASS_ATTRIBUTE, new Model<String>(cssClassNameParam.trim()), WHITE_SPACE);
     }
 }

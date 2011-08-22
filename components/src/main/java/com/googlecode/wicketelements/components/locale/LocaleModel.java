@@ -16,10 +16,11 @@
  */
 package com.googlecode.wicketelements.components.locale;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.model.IModel;
 
 import java.util.Locale;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * Model which contains a locale.  Used for localization.
@@ -31,7 +32,7 @@ public class LocaleModel implements IModel<Locale> {
     private Locale locale;
 
     public LocaleModel(final Locale localeParam) {
-        ParamRequirements.INSTANCE.requireNotNull(localeParam);
+        PARAM_REQ.Object.requireNotNull(localeParam, "The locale parameter must not be null.");
         locale = localeParam;
     }
 

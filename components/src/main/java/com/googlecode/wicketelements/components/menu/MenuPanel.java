@@ -16,7 +16,6 @@
  */
 package com.googlecode.wicketelements.components.menu;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -24,6 +23,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * @author Yannick LOTH
@@ -38,7 +39,7 @@ public class MenuPanel extends Panel {
     }
 
     private void init(final PageTreeModel pages) {
-        ParamRequirements.INSTANCE.requireNotNull(pages);
+        PARAM_REQ.Object.requireNotNull(pages, "The page tree model parameter must not be null.");
         populateRepeatingView(pages);
     }
 

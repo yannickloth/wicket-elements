@@ -16,10 +16,10 @@
  */
 package com.googlecode.wicketelements.library.behavior;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.model.Model;
 
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * Factory to create an attribute modifier for various attributes.
@@ -42,7 +42,7 @@ public final class AttributeModifierFactory {
      */
     public static AttributeModifier newAttributeAppenderForAlt(
             final String altText) {
-        ParamRequirements.INSTANCE.requireNotBlank(altText);
+        PARAM_REQ.String.requireNotBlank(altText, "The alt attribute parameter must not be null.");
         return new AttributeModifier(ALT_ATTRIBUTE, true, new Model<String>(
                 altText));
     }
@@ -56,7 +56,7 @@ public final class AttributeModifierFactory {
      */
     public static AttributeModifier newAttributeAppenderForSrc(
             final String srcText) {
-        ParamRequirements.INSTANCE.requireNotBlank(srcText);
+        PARAM_REQ.String.requireNotBlank(srcText, "The src attribute parameter must not be null.");
         return new AttributeModifier(SRC_ATTRIBUTE, true, new Model<String>(
                 srcText));
     }
@@ -71,7 +71,7 @@ public final class AttributeModifierFactory {
      */
     public static AttributeModifier newAttributeAppenderForTitle(
             final String titleText) {
-        ParamRequirements.INSTANCE.requireNotBlank(titleText);
+        PARAM_REQ.String.requireNotBlank(titleText, "The title attribute parameter must not be null.");
         return new AttributeModifier(TITLE_ATTRIBUTE, true, new Model<String>(
                 titleText));
     }
@@ -86,7 +86,7 @@ public final class AttributeModifierFactory {
      */
     public static AttributeModifier newAttributeModifierForClass(
             final String cssClassNameParam) {
-        ParamRequirements.INSTANCE.requireNotBlank(cssClassNameParam);
+        PARAM_REQ.String.requireNotBlank(cssClassNameParam, "The CSS class parameter must not be null.");
         return new AttributeModifier(CLASS_ATTRIBUTE, true, new Model<String>(
                 cssClassNameParam.trim()));
     }
