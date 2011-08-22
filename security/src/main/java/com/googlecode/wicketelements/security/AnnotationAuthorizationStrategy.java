@@ -27,6 +27,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
@@ -79,28 +80,26 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
         ParamRequirements.INSTANCE.requireNotNull(componentParam);
         ParamRequirements.INSTANCE.requireNotNull(actionParam);
         final Class<? extends Component> compClass = componentParam.getClass();
-        final IUser user = SecureSession.get().getUser();
-        if (user != null) {
-            if (Component.RENDER.equals(actionParam)) {
-                LOGGER.debug("Action=RENDER");
-                if (componentParam.getClass().isAnnotationPresent(RenderAction.class)) {
-                    final RenderAction action = componentParam.getClass().getAnnotation(RenderAction.class);
-                    final String permission = action.permission();
-                    LOGGER.debug("RENDER permission: {}", permission);
-                    return user.hasPermission(permission);
+        if (securityCheck.isSecurityAnnotatedComponent(compClass)) {
+            final IUser user = SecureSession.get().getUser();
+            if (user != null) {
+                Class<? extends Annotation> securityAnnotationClass = null;
+                if (Component.RENDER.equals(actionParam)) {
+                    securityAnnotationClass = RenderAction.class;
+                } else if (Component.ENABLE.equals(actionParam)) {
+                    securityAnnotationClass = EnableAction.class;
+                    if (!isActionAuthorized(componentParam.getParent(), actionParam)) {
+                        return false;
+                    }//else go on, check if the user has the permission
                 }
-            } else if (Component.ENABLE.equals(actionParam)) {
-                LOGGER.debug("Action=ENABLE");
-                if (componentParam.getClass().isAnnotationPresent(EnableAction.class)) {
-                    final EnableAction action = componentParam.getClass().getAnnotation(EnableAction.class);
-                    final String permission = action.permission();
-                    LOGGER.debug("ENABLE permission: {}", permission);
-                    //if parent is disabled, the component is also disabled if rendered
-                    return (isActionAuthorized(componentParam.getParent(), actionParam) && user.hasPermission(permission));
+                if (securityAnnotationClass == null) {
+                    throw new IllegalStateException("Action is unknown (Render or Enable expected).: " + actionParam);
                 }
+                final Set<String> permissions = securityCheck.findImpliedPermissions(compClass, securityAnnotationClass);
+                return securityCheck.isOnePermissionGivenToUser(permissions);
             }
         } else {
-            LOGGER.debug("PermissionBase annotations not present, thus permission granted on action.");
+            LOGGER.debug("No security annotation on the component.  Action is authorized.");
             return true;
         }
         return true;
