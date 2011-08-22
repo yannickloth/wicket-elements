@@ -26,12 +26,42 @@ import org.apache.wicket.Page;
 import org.apache.wicket.settings.IApplicationSettings;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AnnotationSecurityCheck implements SecurityCheck {
+    private <T extends Component, A extends Annotation> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForAction(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam) {
+        final A annotation = componentClassParam.getAnnotation(actionAnnotationClassParam);
+        if (annotation instanceof InstantiateAction) {
+            return Arrays.asList(((InstantiateAction) annotation).constraints());
+        } else if (annotation instanceof RenderAction) {
+            return Arrays.asList(((RenderAction) annotation).constraints());
+        } else if (annotation instanceof EnableAction) {
+            return Arrays.asList(((EnableAction) annotation).constraints());
+        } else
+            return Collections.emptyList();
+    }
+
+    private <T extends Component> boolean isAllConstraintsSatisfied(final Class<T> componentClassParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
+        for (final Class<? extends SecurityConstraint> constraintClass : securityConstraintsParam) {
+            try {
+                final SecurityConstraint constraint = constraintClass.newInstance();
+                if (!constraint.isSatisfiedConstraint(componentClassParam)) {
+                    return false;
+                }
+            } catch (InstantiationException ex) {
+                throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+            } catch (IllegalAccessException ex) {
+                throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+            }
+        }
+        return true;
+    }
+
+    public final <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForAction(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam) {
+        final List<Class<? extends SecurityConstraint>> constraintClasses = findSecurityConstraintsForAction(componentClassParam, actionAnnotationClassParam);
+        return isAllConstraintsSatisfied(componentClassParam, constraintClasses);
+    }
+
     public final boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {
         return AnnotationHelper.isQualifiedAnnotationPresent(componentClassParam, SecurityActionQualifier.class);
     }
