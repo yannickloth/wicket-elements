@@ -42,12 +42,6 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <artifactId>common</artifactId>
-                <groupId>com.googlecode.wicketelements</groupId>
-                <version>${project.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
                 <artifactId>library</artifactId>
                 <groupId>com.googlecode.wicketelements</groupId>
                 <version>${project.version}</version>

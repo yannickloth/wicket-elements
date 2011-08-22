@@ -33,9 +33,5 @@
             <groupId>com.googlecode.jbp</groupId>
             <artifactId>jbp-common</artifactId>
         </dependency>
-        <dependency>
-            <artifactId>common</artifactId>
-            <groupId>com.googlecode.wicketelements</groupId>
-        </dependency>
     </dependencies>
 </project>

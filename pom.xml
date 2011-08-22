@@ -41,6 +41,5 @@
         <module>security-shiro</module>
         <module>components</module>
         <module>library</module>
-        <module>common</module>
     </modules>
 </project>
