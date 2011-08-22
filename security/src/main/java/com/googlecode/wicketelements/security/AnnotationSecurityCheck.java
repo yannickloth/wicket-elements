@@ -72,12 +72,19 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         if (impliedParam.isAssignableFrom(annotationParam)) {
             return true;
         }
-        final Class<?>[] interfaces = annotationParam.getInterfaces();
-        for (final Class<?> current : interfaces) {
-            if (current.isAnnotationPresent(ImpliesSecurityAction.class)) {
-                final ImpliesSecurityAction a = current.getAnnotation(ImpliesSecurityAction.class);
-                for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
-                    return impliesAction(annotClass, impliedParam);
+        if (annotationParam.isAnnotationPresent(ImpliesSecurityAction.class)) {
+            final ImpliesSecurityAction a = annotationParam.getAnnotation(ImpliesSecurityAction.class);
+            for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
+                return impliesAction(annotClass, impliedParam);
+            }
+        } else {
+            final Class<?>[] interfaces = annotationParam.getInterfaces();
+            for (final Class<?> current : interfaces) {
+                if (current.isAnnotationPresent(ImpliesSecurityAction.class)) {
+                    final ImpliesSecurityAction a = current.getAnnotation(ImpliesSecurityAction.class);
+                    for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
+                        return impliesAction(annotClass, impliedParam);
+                    }
                 }
             }
         }

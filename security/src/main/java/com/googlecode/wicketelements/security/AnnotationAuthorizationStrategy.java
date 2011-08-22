@@ -66,9 +66,6 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
         }
         if (securityCheck.isSecurityAnnotatedComponent(componentClassParam)) {
             final Set<String> permissions = securityCheck.findImpliedPermissions(componentClassParam, InstantiateAction.class);
-            if (permissions.isEmpty()) {
-                throw new IllegalStateException("Component with security annotations but no permissions are found: " + componentClassParam.getName());
-            }
             return securityCheck.isOnePermissionGivenToUser(permissions);
         }
         //no annotations so no permission check is required

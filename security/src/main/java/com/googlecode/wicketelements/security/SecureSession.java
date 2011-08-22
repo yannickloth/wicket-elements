@@ -31,8 +31,9 @@ import java.util.List;
  */
 public class SecureSession extends WebSession {
 
+
     private transient static final Logger LOGGER = LoggerFactory.getLogger(SecureSession.class);
-    private IUser user = IUser.ALL_PERMISSIONS_USER;
+    private IUser user = IUser.NO_PERMISSIONS_USER;
     private List<SessionInvalidator> invalidators = Collections.emptyList();
 
     public SecureSession(final Request request) {
