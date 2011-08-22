@@ -16,7 +16,6 @@
  */
 package com.googlecode.wicketelements.security;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import com.googlecode.wicketelements.security.annotations.EnableAction;
 import com.googlecode.wicketelements.security.annotations.InstantiateAction;
 import com.googlecode.wicketelements.security.annotations.RenderAction;
@@ -30,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
+
 /**
  * @author Yannick LOTH
  */
@@ -39,13 +40,13 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
     private SecurityCheck securityCheck;
 
     public AnnotationAuthorizationStrategy(final SecurityCheck securityCheckParam) {
-        ParamRequirements.INSTANCE.requireNotNull(securityCheckParam);
+        PARAM_REQ.Object.requireNotNull(securityCheckParam, "SecurityCheck object must not be null.");
         securityCheck = securityCheckParam;
     }
 
     public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClassParam) {
         LOGGER.debug("Checking if instantiation is authorized for {}", componentClassParam.getName());
-        ParamRequirements.INSTANCE.requireNotNull(componentClassParam);
+        PARAM_REQ.Object.requireNotNull(componentClassParam, "The component's class parameter must not be null.");
         if (securityCheck.isSignInRequired()) {
             LOGGER.debug("Sign in is required.");
             if (!SecureSession.get().isAuthenticated()) {
@@ -74,8 +75,8 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
     }
 
     public boolean isActionAuthorized(final Component componentParam, final Action actionParam) {
-        ParamRequirements.INSTANCE.requireNotNull(componentParam);
-        ParamRequirements.INSTANCE.requireNotNull(actionParam);
+        PARAM_REQ.Object.requireNotNull(componentParam, "The component parameter must not be null.");
+        PARAM_REQ.Object.requireNotNull(actionParam, "The action parameter must not be null.");
         final Class<? extends Component> componentClass = componentParam.getClass();
         if (securityCheck.isSecurityAnnotatedComponent(componentClass)) {
             final IUser user = SecureSession.get().getUser();

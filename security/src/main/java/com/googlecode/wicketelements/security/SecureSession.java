@@ -16,7 +16,6 @@
  */
 package com.googlecode.wicketelements.security;
 
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
@@ -25,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 /**
  * @author Yannick LOTH
@@ -56,7 +57,7 @@ public class SecureSession extends WebSession {
     }
 
     public void switchUser(final IUser userParam) {
-        ParamRequirements.INSTANCE.requireNotNull(userParam);
+        PARAM_REQ.Object.requireNotNull(userParam, "The user parameter must not be null.");
         user = userParam;
     }
 

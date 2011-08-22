@@ -16,8 +16,6 @@
  */
 package com.googlecode.wicketelements.security;
 
-
-import com.googlecode.jbp.common.requirements.ParamRequirements;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.RestartResponseException;
@@ -26,18 +24,20 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
+
 
 public class UnauthorizedComponentInstantiationListener implements IUnauthorizedComponentInstantiationListener {
     private transient static final Logger LOGGER = LoggerFactory.getLogger("wicketelements.security");
     private SecurityCheck securityCheck;
 
     public UnauthorizedComponentInstantiationListener(final SecurityCheck securityCheckParam) {
-        ParamRequirements.INSTANCE.requireNotNull(securityCheckParam);
+        PARAM_REQ.Object.requireNotNull(securityCheckParam, "The SecurityCheck object must not be null.");
         securityCheck = securityCheckParam;
     }
 
     public void onUnauthorizedInstantiation(final Component componentParam) {
-        ParamRequirements.INSTANCE.requireNotNull(componentParam);
+        PARAM_REQ.Object.requireNotNull(componentParam, "The component parameter must not be null.");
         if (!SecureSession.get().isAuthenticated()) {
             LOGGER.debug("Unauthorized and user not authenticated.");
             if (securityCheck.isApplicationWithSignInPageSpecified()) {
