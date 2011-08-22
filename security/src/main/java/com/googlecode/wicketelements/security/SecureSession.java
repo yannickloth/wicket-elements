@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class SecureSession extends WebSession {
 
-
     private transient static final Logger LOGGER = LoggerFactory.getLogger(SecureSession.class);
     private IUser user = IUser.NO_PERMISSIONS_USER;
     private List<SessionInvalidator> invalidators = Collections.emptyList();
@@ -68,23 +67,26 @@ public class SecureSession extends WebSession {
      *         <code>false</code> else.
      */
     public boolean isAuthenticated() {
-        return user != null && user != IUser.ALL_PERMISSIONS_USER;
+        return user != null && user != IUser.NO_PERMISSIONS_USER;
     }
 
     @Override
     public void invalidate() {
         LOGGER.debug("Invalidating session with user {} and id {}.", user, Session.get().getId());
-        user = IUser.ALL_PERMISSIONS_USER;
-        runCustomInvalidators();
+        commonInvalidate();
         super.invalidate();
     }
 
     @Override
     public void invalidateNow() {
         LOGGER.debug("Invalidating now session with user: {}", user);
-        user = IUser.ALL_PERMISSIONS_USER;
-        runCustomInvalidators();
+        commonInvalidate();
         super.invalidateNow();
+    }
+
+    private void commonInvalidate() {
+        user = IUser.NO_PERMISSIONS_USER;
+        runCustomInvalidators();
     }
 
     private void runCustomInvalidators() {
