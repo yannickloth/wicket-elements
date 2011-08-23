@@ -22,20 +22,26 @@ import org.apache.wicket.Page;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public interface SecurityCheck {
+
+    <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam);
+
+    <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam);
+
+    <T extends Component> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam);
+
     <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass);
 
-    <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam);
+    <T extends Component> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam);
 
-    <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForAction(final T componentParam, final Class<A> actionAnnotationClassParam);
+    <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, List<Class<? extends SecurityConstraint>> constraintClassesParam);
 
     boolean isApplicationWithSignInPageSpecified();
 
-    boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam);
-
-    <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam);
+    boolean isAtLeastOnePermissionGivenToUser(final Collection<String> permissionsParam);
 
     boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam);
 

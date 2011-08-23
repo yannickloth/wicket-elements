@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Set;
 
 import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
@@ -66,8 +67,9 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
         }
         if (securityCheck.isSecurityAnnotatedComponent(componentClassParam)) {
             final Set<String> permissions = securityCheck.findImpliedPermissions(componentClassParam, InstantiateAction.class);
-            final boolean constraintsSatisfied = securityCheck.isAllConstraintsSatisfiedForInstantiation(componentClassParam, InstantiateAction.class);
-            final boolean userHasPermission = securityCheck.isOnePermissionGivenToUser(permissions);
+            final boolean userHasPermission = securityCheck.isAtLeastOnePermissionGivenToUser(permissions);
+            final List<Class<? extends InstantiationSecurityConstraint>> constraints = securityCheck.findSecurityConstraintsForInstantiation(componentClassParam);
+            final boolean constraintsSatisfied = securityCheck.isAllSecurityConstraintsSatisfiedForInstantiation(componentClassParam, constraints);
             return constraintsSatisfied && userHasPermission;
         }
         //no annotations so no permission check is required
@@ -82,20 +84,23 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
             final IUser user = SecureSession.get().getUser();
             if (user != null) {
                 Class<? extends Annotation> securityAnnotationClass = null;
+                List<Class<? extends SecurityConstraint>> constraints = null;
                 if (Component.RENDER.equals(actionParam)) {
                     securityAnnotationClass = RenderAction.class;
+                    constraints = securityCheck.findSecurityConstraintsForRender(componentParam);
                 } else if (Component.ENABLE.equals(actionParam)) {
                     securityAnnotationClass = EnableAction.class;
                     if (!isActionAuthorized(componentParam.getParent(), actionParam)) {
                         return false;
                     }//else go on, check if the user has the permission
+                    constraints = securityCheck.findSecurityConstraintsForEnable(componentParam);
                 }
                 if (securityAnnotationClass == null) {
                     throw new IllegalStateException("Action is unknown (Render or Enable expected).: " + actionParam);
                 }
-                final boolean constraintsSatisfied = securityCheck.isAllConstraintsSatisfiedForAction(componentParam, securityAnnotationClass);
+                final boolean constraintsSatisfied = securityCheck.isAllSecurityConstraintsSatisfiedForAction(componentParam, constraints);
                 final Set<String> permissions = securityCheck.findImpliedPermissions(componentClass, securityAnnotationClass);
-                final boolean userHasPermission = securityCheck.isOnePermissionGivenToUser(permissions);
+                final boolean userHasPermission = securityCheck.isAtLeastOnePermissionGivenToUser(permissions);
                 return constraintsSatisfied && userHasPermission;
             }
         } else {

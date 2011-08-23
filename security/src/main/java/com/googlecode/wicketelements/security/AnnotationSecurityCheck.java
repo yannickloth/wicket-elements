@@ -30,25 +30,20 @@ import java.util.*;
 import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 public class AnnotationSecurityCheck implements SecurityCheck {
-    private <T extends Component, A extends Annotation> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForAction(final T componentParam, final Class<A> actionAnnotationClassParam) {
-        final A annotation = componentParam.getClass().getAnnotation(actionAnnotationClassParam);
-        if (annotation instanceof RenderAction) {
-            return Arrays.asList(((RenderAction) annotation).constraints());
-        } else if (annotation instanceof EnableAction) {
-            return Arrays.asList(((EnableAction) annotation).constraints());
-        } else
-            return Collections.emptyList();
+
+    public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam) {
+        return Arrays.asList(componentParam.getClass().getAnnotation(EnableAction.class).constraints());
     }
 
-    private <T extends Component, A extends Annotation> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam) {
-        final A annotation = componentClassParam.getAnnotation(actionAnnotationClassParam);
-        if (annotation instanceof InstantiateAction) {
-            return Arrays.asList(((InstantiateAction) annotation).constraints());
-        } else
-            return Collections.emptyList();
+    public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam) {
+        return Arrays.asList(componentParam.getClass().getAnnotation(RenderAction.class).constraints());
     }
 
-    private <T extends Component> boolean isAllConstraintsSatisfied(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
+    public <T extends Component> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam) {
+        return Arrays.asList(componentClassParam.getAnnotation(InstantiateAction.class).constraints());
+    }
+
+    public <T extends Component> boolean isAllConstraintsSatisfied(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
         for (final Class<? extends SecurityConstraint> constraintClass : securityConstraintsParam) {
             try {
                 final SecurityConstraint constraint = constraintClass.newInstance();
@@ -64,7 +59,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return true;
     }
 
-    private <T extends Component> boolean isAllConstraintsSatisfied(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam) {
+    public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam) {
         for (final Class<? extends InstantiationSecurityConstraint> constraintClass : securityConstraintsParam) {
             try {
                 final InstantiationSecurityConstraint constraint = constraintClass.newInstance();
@@ -80,21 +75,15 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return true;
     }
 
-    public final <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam) {
-        final List<Class<? extends InstantiationSecurityConstraint>> constraintClasses = findSecurityConstraintsForInstantiation(componentClassParam, actionAnnotationClassParam);
-        return isAllConstraintsSatisfied(componentClassParam, constraintClasses);
-    }
-
-    public <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForAction(final T componentParam, final Class<A> actionAnnotationClassParam) {
-        final List<Class<? extends SecurityConstraint>> constraintClasses = findSecurityConstraintsForAction(componentParam, actionAnnotationClassParam);
-        return isAllConstraintsSatisfied(componentParam, constraintClasses);
+    public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, List<Class<? extends SecurityConstraint>> constraintClassesParam) {
+        return isAllConstraintsSatisfied(componentParam, constraintClassesParam);
     }
 
     public final boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {
         return AnnotationHelper.isQualifiedAnnotationPresent(componentClassParam, SecurityActionQualifier.class);
     }
 
-    public final boolean isOnePermissionGivenToUser(final Collection<String> permissionsParam) {
+    public final boolean isAtLeastOnePermissionGivenToUser(final Collection<String> permissionsParam) {
         final IUser user = SecureSession.get().getUser();
         for (final String perm : permissionsParam) {
             if (!StringUtils.isBlank(perm) && user.hasPermission(perm)) {
@@ -110,7 +99,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         final Set<String> impliedPermissions = new HashSet<String>();
         final List<Annotation> securityAnnotations = AnnotationHelper.getQualifiedAnnotations(componentClassParam, SecurityActionQualifier.class);
         for (final Annotation securityAnnotation : securityAnnotations) {
-            if (impliesAction(securityAnnotation.getClass(), actionAnnotationClass)) {
+            if (impliesAction(securityAnnotation.annotationType(), actionAnnotationClass)) {
                 if (securityAnnotation instanceof InstantiateAction) {
                     final InstantiateAction action = (InstantiateAction) securityAnnotation;
                     impliedPermissions.add(action.permission());
@@ -126,7 +115,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return impliedPermissions;
     }
 
-    public final <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
+    private final <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
         if (impliedParam.isAssignableFrom(annotationParam)) {
             return true;
         }
@@ -134,16 +123,6 @@ public class AnnotationSecurityCheck implements SecurityCheck {
             final ImpliesSecurityAction a = annotationParam.getAnnotation(ImpliesSecurityAction.class);
             for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
                 return impliesAction(annotClass, impliedParam);
-            }
-        } else {
-            final Class<?>[] interfaces = annotationParam.getInterfaces();
-            for (final Class<?> current : interfaces) {
-                if (current.isAnnotationPresent(ImpliesSecurityAction.class)) {
-                    final ImpliesSecurityAction a = current.getAnnotation(ImpliesSecurityAction.class);
-                    for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
-                        return impliesAction(annotClass, impliedParam);
-                    }
-                }
             }
         }
         return false;
@@ -206,22 +185,5 @@ public class AnnotationSecurityCheck implements SecurityCheck {
             page = annot.page();
         }
         return page;
-    }
-
-    public final boolean isImpliedAction(final Class<? extends Annotation> annotationParam, final Class<? extends Annotation> impliedParam) {
-        PARAM_REQ.Object.requireNotNull(annotationParam, "Action annotation class must not be null.");
-        PARAM_REQ.Object.requireNotNull(impliedParam, "Implied action annotation class must not be null.");
-        if (annotationParam.equals(impliedParam)) {
-            return true;
-        }
-        if (annotationParam.isAnnotationPresent(ImpliesSecurityAction.class)) {
-            final ImpliesSecurityAction a = annotationParam.getAnnotation(ImpliesSecurityAction.class);
-            for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
-                if (isImpliedAction(annotClass, impliedParam)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }
