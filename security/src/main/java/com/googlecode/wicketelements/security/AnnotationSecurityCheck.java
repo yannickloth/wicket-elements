@@ -25,6 +25,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.settings.IApplicationSettings;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
@@ -43,40 +45,62 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return Arrays.asList(componentClassParam.getAnnotation(InstantiateAction.class).constraints());
     }
 
-    public <T extends Component> boolean isAllConstraintsSatisfied(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
+    public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
         for (final Class<? extends SecurityConstraint> constraintClass : securityConstraintsParam) {
-            try {
-                final SecurityConstraint constraint = constraintClass.newInstance();
-                if (!constraint.isSatisfiedConstraint(componentParam)) {
-                    return false;
-                }
-            } catch (InstantiationException ex) {
-                throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+            SecurityConstraint constraint = instantiateSecurityConstraint(constraintClass);
+            if (!constraint.isSatisfiedConstraint(componentParam)) {
+                return false;
             }
         }
         return true;
+    }
+
+    private SecurityConstraint instantiateSecurityConstraint(Class<? extends SecurityConstraint> constraintClassParam) {
+        try {
+            for (final Method m : constraintClassParam.getDeclaredMethods()) {
+                if (m.isAnnotationPresent(Factory.class)) {
+                    try {
+                        return (SecurityConstraint) m.invoke(null);
+                    } catch (InvocationTargetException ex) {
+                        throw new IllegalStateException("Cannot execute factory method for InstantiationSecurityConstraint: " + constraintClassParam.getName());
+                    }
+                }
+            }
+            return constraintClassParam.newInstance();
+        } catch (InstantiationException ex) {
+            throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+        } catch (IllegalAccessException ex) {
+            throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+        }
     }
 
     public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam) {
         for (final Class<? extends InstantiationSecurityConstraint> constraintClass : securityConstraintsParam) {
-            try {
-                final InstantiationSecurityConstraint constraint = constraintClass.newInstance();
-                if (!constraint.isSatisfiedConstraint(componentClassParam)) {
-                    return false;
-                }
-            } catch (InstantiationException ex) {
-                throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+            InstantiationSecurityConstraint constraint = instantiateSecurityConstraint(constraintClass);
+            if (!constraint.isSatisfiedConstraint(componentClassParam)) {
+                return false;
             }
         }
         return true;
     }
 
-    public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, List<Class<? extends SecurityConstraint>> constraintClassesParam) {
-        return isAllConstraintsSatisfied(componentParam, constraintClassesParam);
+    private InstantiationSecurityConstraint instantiateSecurityConstraint(Class<? extends InstantiationSecurityConstraint> constraintClassParam) {
+        try {
+            for (final Method m : constraintClassParam.getDeclaredMethods()) {
+                if (m.isAnnotationPresent(Factory.class)) {
+                    try {
+                        return (InstantiationSecurityConstraint) m.invoke(null);
+                    } catch (InvocationTargetException ex) {
+                        throw new IllegalStateException("Cannot execute factory method for InstantiationSecurityConstraint: " + constraintClassParam.getName());
+                    }
+                }
+            }
+            return constraintClassParam.newInstance();
+        } catch (InstantiationException ex) {
+            throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+        } catch (IllegalAccessException ex) {
+            throw new IllegalStateException("Cannot instantiate security constraint class.", ex);
+        }
     }
 
     public final boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {

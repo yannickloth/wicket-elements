@@ -17,9 +17,22 @@
 package com.googlecode.wicketelements.security.constraints.action;
 
 import com.googlecode.wicketelements.security.SecurityConstraint;
+import com.googlecode.wicketelements.security.annotations.Factory;
 import org.apache.wicket.Component;
 
 public class NeverSatisfiedActionConstraint implements SecurityConstraint {
+    private static final NeverSatisfiedActionConstraint INSTANCE = new NeverSatisfiedActionConstraint();
+
+    @Factory
+    public static NeverSatisfiedActionConstraint getInstance() {
+        return INSTANCE;
+    }
+
+    private NeverSatisfiedActionConstraint() {
+        if (INSTANCE != null) {
+            throw new IllegalStateException("The constructor of this singleton may only be executed once.");
+        }
+    }
 
     public <T extends Component> boolean isSatisfiedConstraint(final T componentClassParam) {
         return false;
