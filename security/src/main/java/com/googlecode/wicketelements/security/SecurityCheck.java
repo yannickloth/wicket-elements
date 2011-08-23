@@ -27,7 +27,9 @@ import java.util.Set;
 public interface SecurityCheck {
     <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass);
 
-    <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForAction(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam);
+    <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final Class<A> actionAnnotationClassParam);
+
+    <T extends Component, A extends Annotation> boolean isAllConstraintsSatisfiedForAction(final T componentParam, final Class<A> actionAnnotationClassParam);
 
     boolean isApplicationWithSignInPageSpecified();
 

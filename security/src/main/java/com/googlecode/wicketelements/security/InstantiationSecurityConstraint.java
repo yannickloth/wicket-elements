@@ -27,13 +27,13 @@ import org.apache.wicket.Component;
  *
  * @author Yannick LOTH
  */
-public interface SecurityConstraint {
+public interface InstantiationSecurityConstraint {
     /**
-     * Checks if a security constraint is satisfied before executing an action on a Wicket component.
+     * Checks if a security constraint is satisfied before instantiating a Wicket component.
      *
-     * @param componentParam The component on which the action is executed.
+     * @param componentClassParam The component on which the action is executed.
      * @param <T>                 The component's class.
      * @return {@code true} if the constraint is satisfied, {@code false} else.
      */
-    public <T extends Component> boolean isSatisfiedConstraint(final T componentParam);
+    public <T extends Component> boolean isSatisfiedConstraint(final Class<T> componentClassParam);
 }

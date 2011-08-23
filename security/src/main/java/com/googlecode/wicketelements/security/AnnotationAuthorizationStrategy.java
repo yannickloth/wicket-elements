@@ -66,7 +66,7 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
         }
         if (securityCheck.isSecurityAnnotatedComponent(componentClassParam)) {
             final Set<String> permissions = securityCheck.findImpliedPermissions(componentClassParam, InstantiateAction.class);
-            final boolean constraintsSatisfied = securityCheck.isAllConstraintsSatisfiedForAction(componentClassParam, InstantiateAction.class);
+            final boolean constraintsSatisfied = securityCheck.isAllConstraintsSatisfiedForInstantiation(componentClassParam, InstantiateAction.class);
             final boolean userHasPermission = securityCheck.isOnePermissionGivenToUser(permissions);
             return constraintsSatisfied && userHasPermission;
         }
@@ -93,7 +93,7 @@ public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
                 if (securityAnnotationClass == null) {
                     throw new IllegalStateException("Action is unknown (Render or Enable expected).: " + actionParam);
                 }
-                final boolean constraintsSatisfied = securityCheck.isAllConstraintsSatisfiedForAction(componentClass, securityAnnotationClass);
+                final boolean constraintsSatisfied = securityCheck.isAllConstraintsSatisfiedForAction(componentParam, securityAnnotationClass);
                 final Set<String> permissions = securityCheck.findImpliedPermissions(componentClass, securityAnnotationClass);
                 final boolean userHasPermission = securityCheck.isOnePermissionGivenToUser(permissions);
                 return constraintsSatisfied && userHasPermission;

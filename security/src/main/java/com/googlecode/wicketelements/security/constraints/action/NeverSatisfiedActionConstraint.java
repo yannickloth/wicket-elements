@@ -14,14 +14,14 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.security.constraints;
+package com.googlecode.wicketelements.security.constraints.action;
 
 import com.googlecode.wicketelements.security.SecurityConstraint;
 import org.apache.wicket.Component;
 
-public class NeverSatisfiedConstraint implements SecurityConstraint {
+public class NeverSatisfiedActionConstraint implements SecurityConstraint {
 
-    public <T extends Component> boolean isSatisfiedConstraint(final Class<T> componentClassParam) {
+    public <T extends Component> boolean isSatisfiedConstraint(final T componentClassParam) {
         return false;
     }
 }

@@ -14,22 +14,14 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.security.annotations;
+package com.googlecode.wicketelements.security.constraints.instantiation;
 
 import com.googlecode.wicketelements.security.InstantiationSecurityConstraint;
+import org.apache.wicket.Component;
 
-import java.lang.annotation.*;
+public class NeverSatisfiedInstantiationConstraint implements InstantiationSecurityConstraint {
 
-/**
- * Annotation used to declare security constraints that should be validated when instantiating Apache Wicket components.
- */
-@SecurityActionQualifier
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Inherited
-public @interface InstantiateAction {
-    String permission();
-
-    Class<? extends InstantiationSecurityConstraint>[] constraints() default {};
+    public <T extends Component> boolean isSatisfiedConstraint(final Class<T> componentClassParam) {
+        return false;
+    }
 }
