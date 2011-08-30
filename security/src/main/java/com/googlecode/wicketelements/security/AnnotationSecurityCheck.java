@@ -154,7 +154,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
 
     public final boolean isSignInPage(final Class<? extends Page> pageClassParam) {
         PARAM_REQ.Object.requireNotNull(pageClassParam, "Sign in page parameter must not be null.");
-        return pageClassParam.equals(signInPage());
+        return pageClassParam.equals(signInPage()) || pageClassParam.isAnnotationPresent(PageWithSignIn.class);
     }
 
     public final boolean isSignOutPage(final Class<? extends Page> pageClassParam) {
