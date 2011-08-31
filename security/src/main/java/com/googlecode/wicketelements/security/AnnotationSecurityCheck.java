@@ -34,15 +34,30 @@ import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 public class AnnotationSecurityCheck implements SecurityCheck {
 
     public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam) {
-        return Arrays.asList(componentParam.getClass().getAnnotation(EnableAction.class).constraints());
+        List<Class<? extends SecurityConstraint>> list = Collections.emptyList();
+        final EnableAction annot = componentParam.getClass().getAnnotation(EnableAction.class);
+        if (annot != null) {
+            list = Arrays.asList(annot.constraints());
+        }
+        return list;
     }
 
     public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam) {
-        return Arrays.asList(componentParam.getClass().getAnnotation(RenderAction.class).constraints());
+        List<Class<? extends SecurityConstraint>> list = Collections.emptyList();
+        final RenderAction annot = componentParam.getClass().getAnnotation(RenderAction.class);
+        if (annot != null) {
+            list = Arrays.asList(annot.constraints());
+        }
+        return list;
     }
 
     public <T extends Component> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam) {
-        return Arrays.asList(componentClassParam.getAnnotation(InstantiateAction.class).constraints());
+        List<Class<? extends InstantiationSecurityConstraint>> list = Collections.emptyList();
+        final InstantiateAction annot = componentClassParam.getAnnotation(InstantiateAction.class);
+        if (annot != null) {
+            list = Arrays.asList(annot.constraints());
+        }
+        return list;
     }
 
     public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
