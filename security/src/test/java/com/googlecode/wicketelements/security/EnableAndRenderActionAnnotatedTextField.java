@@ -17,25 +17,26 @@
 package com.googlecode.wicketelements.security;
 
 import com.googlecode.wicketelements.security.annotations.EnableAction;
-import com.googlecode.wicketelements.security.constraints.action.AlwaysSatisfiedActionConstraint;
+import com.googlecode.wicketelements.security.annotations.RenderAction;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 
-@EnableAction(permission = "enable", constraints = AlwaysSatisfiedActionConstraint.class)
-public class EnableActionAnnotatedTextField extends TextField<String> {
-    public EnableActionAnnotatedTextField(String id) {
+@RenderAction(permission = "render")
+@EnableAction(permission = "enable")
+public class EnableAndRenderActionAnnotatedTextField extends TextField<String> {
+    public EnableAndRenderActionAnnotatedTextField(String id) {
         super(id);
     }
 
-    public EnableActionAnnotatedTextField(String id, Class<String> type) {
+    public EnableAndRenderActionAnnotatedTextField(String id, Class<String> type) {
         super(id, type);
     }
 
-    public EnableActionAnnotatedTextField(String id, IModel<String> model) {
+    public EnableAndRenderActionAnnotatedTextField(String id, IModel<String> model) {
         super(id, model);
     }
 
-    public EnableActionAnnotatedTextField(String id, IModel<String> model, Class<String> type) {
+    public EnableAndRenderActionAnnotatedTextField(String id, IModel<String> model, Class<String> type) {
         super(id, model, type);
     }
 }
