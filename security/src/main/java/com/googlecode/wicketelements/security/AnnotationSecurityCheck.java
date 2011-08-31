@@ -35,8 +35,8 @@ public class AnnotationSecurityCheck implements SecurityCheck {
 
     public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam) {
         List<Class<? extends SecurityConstraint>> list = Collections.emptyList();
-        final EnableAction annot = componentParam.getClass().getAnnotation(EnableAction.class);
-        if (annot != null) {
+        if (componentParam.getClass().isAnnotationPresent(EnableAction.class)) {
+            final EnableAction annot = componentParam.getClass().getAnnotation(EnableAction.class);
             list = Arrays.asList(annot.constraints());
         }
         return list;
@@ -44,8 +44,8 @@ public class AnnotationSecurityCheck implements SecurityCheck {
 
     public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam) {
         List<Class<? extends SecurityConstraint>> list = Collections.emptyList();
-        final RenderAction annot = componentParam.getClass().getAnnotation(RenderAction.class);
-        if (annot != null) {
+        if (componentParam.getClass().isAnnotationPresent(RenderAction.class)) {
+            final RenderAction annot = componentParam.getClass().getAnnotation(RenderAction.class);
             list = Arrays.asList(annot.constraints());
         }
         return list;
@@ -53,8 +53,8 @@ public class AnnotationSecurityCheck implements SecurityCheck {
 
     public <T extends Component> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam) {
         List<Class<? extends InstantiationSecurityConstraint>> list = Collections.emptyList();
-        final InstantiateAction annot = componentClassParam.getAnnotation(InstantiateAction.class);
-        if (annot != null) {
+        if (componentClassParam.isAnnotationPresent(InstantiateAction.class)) {
+            final InstantiateAction annot = componentClassParam.getAnnotation(InstantiateAction.class);
             list = Arrays.asList(annot.constraints());
         }
         return list;
