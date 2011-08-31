@@ -29,13 +29,24 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
  * @author Yannick LOTH
  */
 public class ShiroRequestCycle extends WebRequestCycle {
-    public ShiroRequestCycle(final WebApplication application, final WebRequest request, final Response response) {
+    private org.apache.shiro.mgt.SecurityManager securityManager;
+
+    public ShiroRequestCycle(final WebApplication application, final WebRequest request, final Response response, final org.apache.shiro.mgt.SecurityManager securityManagerParam) {
         super(application, request, response);
+        securityManager = securityManagerParam;
     }
 
     @Override
     protected void onBeginRequest() {
         super.onBeginRequest();
-        SecurityUtils.setSecurityManager(ShiroWebApplication.get().getSecurityManager());
+        SecurityUtils.setSecurityManager(securityManager);
+    }
+
+    public org.apache.shiro.mgt.SecurityManager getSecurityManager() {
+        return securityManager;
+    }
+
+    public void setSecurityManager(final org.apache.shiro.mgt.SecurityManager securityManagerParam) {
+        securityManager = securityManagerParam;
     }
 }
