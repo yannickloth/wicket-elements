@@ -16,12 +16,14 @@
  */
 package com.googlecode.wicketelements.security;
 
+import com.googlecode.jbp.common.requirements.Reqs;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,20 +38,24 @@ public class SecureSession extends WebSession {
     private IUser user = IUser.NO_PERMISSIONS_USER;
     private List<SessionInvalidator> invalidators = Collections.emptyList();
 
+    public void addInvalidator(final SessionInvalidator invalidatorParam) {
+        Reqs.PARAM_REQ.Object.requireNotNull(invalidatorParam, "Impossible to add a invalidator which is null.");
+        if (invalidators.equals(Collections.emptyList())) {
+            invalidators = new ArrayList<SessionInvalidator>();
+        }
+        invalidators.add(invalidatorParam);
+    }
+
+    public void removeInvalidator(final SessionInvalidator invalidatorParam) {
+        invalidators.remove(invalidatorParam);
+    }
+
     public SecureSession(final Request request) {
         super(request);
     }
 
     public static SecureSession get() {
         return (SecureSession) Session.get();
-    }
-
-    public List<SessionInvalidator> getInvalidators() {
-        return invalidators;
-    }
-
-    public void setInvalidators(final List<SessionInvalidator> invalidatorsParam) {
-        invalidators = invalidatorsParam;
     }
 
     public IUser getUser() {

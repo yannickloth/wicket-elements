@@ -14,13 +14,12 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.security.shiro;
+package com.googlecode.wicketelements.security;
 
-import com.googlecode.wicketelements.security.SecureSession;
 import org.apache.wicket.Request;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
 
-public class ShiroWebSession extends SecureSession {
-    public ShiroWebSession(final Request request) {
-        super(request);
-    }
+public interface RequestCycleFactory {
+    RequestCycle newRequestCycle(final Request request, final Response response);
 }
