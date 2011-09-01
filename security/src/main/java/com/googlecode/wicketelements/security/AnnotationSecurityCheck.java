@@ -99,7 +99,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         Reqs.PARAM_REQ.Object.requireNotNull(componentClassParam, "Cannot find security constraints on a null component class!");
         Reqs.PARAM_REQ.Object.requireNotNull(securityConstraintsParam, "Cannot check for constraints satisfaction with null list of constraints!");
         for (final Class<? extends InstantiationSecurityConstraint> constraintClass : securityConstraintsParam) {
-            InstantiationSecurityConstraint constraint = instantiateSecurityConstraint(constraintClass);
+            InstantiationSecurityConstraint constraint = instantiateInstantiationSecurityConstraint(constraintClass);
             if (!constraint.isSatisfiedConstraint(componentClassParam)) {
                 return false;
             }
@@ -107,7 +107,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return true;
     }
 
-    private InstantiationSecurityConstraint instantiateSecurityConstraint(Class<? extends InstantiationSecurityConstraint> constraintClassParam) {
+    private InstantiationSecurityConstraint instantiateInstantiationSecurityConstraint(Class<? extends InstantiationSecurityConstraint> constraintClassParam) {
         try {
             for (final Method m : constraintClassParam.getDeclaredMethods()) {
                 if (m.isAnnotationPresent(Factory.class)) {
