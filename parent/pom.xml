@@ -216,6 +216,6 @@
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <wicketVersion>1.4.17</wicketVersion>
+        <wicketVersion>1.4.18</wicketVersion>
     </properties>
 </project>
