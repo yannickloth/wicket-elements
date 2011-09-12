@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite hostname="Yannick-Loths-iMac.local" name="com.googlecode.wicketelements.library.behavior.LessFileHeaderContributorTest" tests="1" failures="0" timestamp="1 Sep 2011 19:06:36 GMT" time="0.086" errors="0">
-  <testcase name="testContributor" time="0.068" classname="com.googlecode.wicketelements.library.behavior.LessFileHeaderContributorTest"/>
-</testsuite>
