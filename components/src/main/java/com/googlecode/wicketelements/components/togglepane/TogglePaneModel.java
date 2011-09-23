@@ -1,45 +1,21 @@
 package com.googlecode.wicketelements.components.togglepane;
 
-import com.googlecode.jbp.common.requirements.Reqs;
+import org.apache.wicket.Component;
 
-import java.util.List;
+public interface TogglePaneModel {
+    Component getContentObject();
 
-public class TogglePaneModel {
-    private List<AbstractPane> panes;
-    private List<AbstractPane> explodedPanes;
-    private boolean allowMultipleExplodedPanes;
+    Component getTitleObject();
 
-    public void togglePane(final AbstractPane paneParam) {
-        Reqs.PARAM_REQ.Object.requireNotNull(paneParam, "The pane that must be toggled must not be null.");
-        if (!paneParam.isExploded()) {
-            if (!allowMultipleExplodedPanes) {
-                collapseAllActivePanes();
-            }
-            explodePane(paneParam);
-        } else {
-            collapsePane(paneParam);
-        }
-    }
+    void toggleContent();
 
-    private boolean isExplodedPane(final AbstractPane paneParam) {
-        return explodedPanes.contains(paneParam);
-    }
+    void toggleEnableState();
 
-    private void explodePane(final AbstractPane paneParam) {
-        Reqs.GENERIC_REQ.Logic.requireFalse(explodedPanes.contains(paneParam), "The pane that must be exploded must be collapsed.");
-        paneParam.toggleContent();
-        explodedPanes.add(paneParam);
-    }
+    boolean isCollapsed();
 
-    private void collapsePane(final AbstractPane paneParam) {
-        Reqs.GENERIC_REQ.Logic.requireTrue(explodedPanes.contains(paneParam), "The pane that must be collapsed must be exploded.");
-        paneParam.toggleContent();
-        explodedPanes.remove(paneParam);
-    }
+    boolean isExpanded();
 
-    private void collapseAllActivePanes() {
-        for (final AbstractPane currentPane : explodedPanes) {
-            collapsePane(currentPane);
-        }
-    }
+    boolean isEnabled();
+
+    boolean isDisabled();
 }
