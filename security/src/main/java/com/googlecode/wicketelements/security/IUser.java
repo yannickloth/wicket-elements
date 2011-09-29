@@ -16,10 +16,12 @@
  */
 package com.googlecode.wicketelements.security;
 
+import java.io.Serializable;
+
 /**
  * @author Yannick LOTH
  */
-public interface IUser {
+public interface IUser extends Serializable {
 
     public static final IUser ALL_PERMISSIONS_USER = new IUser() {
 
