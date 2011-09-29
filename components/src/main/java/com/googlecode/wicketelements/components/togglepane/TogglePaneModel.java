@@ -3,9 +3,9 @@ package com.googlecode.wicketelements.components.togglepane;
 import org.apache.wicket.Component;
 
 public interface TogglePaneModel {
-    Component getContentObject();
+    Component getContentComponent();
 
-    Component getTitleObject();
+    Component getTitleComponent();
 
     void toggleContent();
 
@@ -18,4 +18,8 @@ public interface TogglePaneModel {
     boolean isEnabled();
 
     boolean isDisabled();
+
+    void addEventListener(final TogglePaneModelListener togglePaneModelListenerParam);
+
+    void removeEventListener(final TogglePaneModelListener togglePaneModelListenerParam);
 }

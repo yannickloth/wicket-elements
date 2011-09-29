@@ -7,9 +7,9 @@ import com.googlecode.wicketelements.components.togglepane.TogglePaneModelListen
 
 import java.util.List;
 
-public abstract class AbstractAccordionModel<T extends TogglePaneModel> implements AccordionModel, TogglePaneModelListener<T> {
+public abstract class AbstractAccordionModel implements AccordionModel, TogglePaneModelListener {
     boolean maximumOneTogglePaneExpanded;
-    private List<T> expandedTogglePaneModels;
+    private List<TogglePaneModel> expandedTogglePaneModels;
 
     public boolean isMaximumOneTogglePaneExpanded() {
         return maximumOneTogglePaneExpanded;
@@ -19,19 +19,19 @@ public abstract class AbstractAccordionModel<T extends TogglePaneModel> implemen
         maximumOneTogglePaneExpanded = maximumOneTogglePaneExpandedParam;
     }
 
-    public final void togglePaneEnabled(final TogglePaneModelEvent<T> modelEventParam) {
+    public final void togglePaneEnabled(final TogglePaneModelEvent modelEventParam) {
         //Do nothing
     }
 
-    public final void togglePaneDisabled(final TogglePaneModelEvent<T> modelEventParam) {
+    public final void togglePaneDisabled(final TogglePaneModelEvent modelEventParam) {
         //Do nothing
     }
 
-    public final void togglePaneCollapsed(final TogglePaneModelEvent<T> modelEventParam) {
+    public final void togglePaneCollapsed(final TogglePaneModelEvent modelEventParam) {
         //Do nothing
     }
 
-    public final void togglePaneExpanded(final TogglePaneModelEvent<T> modelEventParam) {
+    public final void togglePaneExpanded(final TogglePaneModelEvent modelEventParam) {
         if (maximumOneTogglePaneExpanded) { //collapse all other expanded panes
             Reqs.PRE_COND.Logic.requireTrue(expandedTogglePaneModels.size() <= 1, "There must be maximum one expanded pane.");
             for (final TogglePaneModel current : expandedTogglePaneModels) {
