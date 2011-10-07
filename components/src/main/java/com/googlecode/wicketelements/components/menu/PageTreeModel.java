@@ -17,24 +17,37 @@
 package com.googlecode.wicketelements.components.menu;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Session;
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Abstract model that contains a list of pages.
- * 
+ *
  * @author Yannick LOTH
  */
-public class PageTreeModel extends LoadableDetachableModel<PageTree> {
+public class PageTreeModel implements IModel<PageTree> {
 
     private static final long serialVersionUID = 1L;
+    private PageTree pageTree;
 
-    @Override
-    protected PageTree load() {
-        if (Navigable.class.isAssignableFrom(Session.get().getClass())) {
-            return ((Navigable) Session.get()).getPageTree();
-        } else {
+    public PageTreeModel() {
+    }
+
+    public PageTreeModel(final PageTree pageTreeParam) {
+        pageTree = pageTreeParam;
+    }
+
+    public PageTree getObject() {
+        if (pageTree == null) {
             return new PageTree(Application.get().getHomePage());
+        } else {
+            return pageTree;
         }
+    }
+
+    public void setObject(final PageTree pageTreeParam) {
+        pageTree = pageTreeParam;
+    }
+
+    public void detach() {
     }
 }

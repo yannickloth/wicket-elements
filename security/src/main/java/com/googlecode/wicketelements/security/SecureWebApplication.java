@@ -16,43 +16,16 @@
  */
 package com.googlecode.wicketelements.security;
 
-import com.googlecode.wicketelements.security.annotations.SignOut;
-import org.apache.wicket.*;
-import org.apache.wicket.authorization.IAuthorizationStrategy;
-import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import org.apache.wicket.Application;
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * @author Yannick LOTH
  */
-@SignOut(page = SignOutPage.class)
 public abstract class SecureWebApplication extends WebApplication {
-
-    private IAuthorizationStrategy authorizationStrategy;
-    private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener;
-    private SecurityCheck securityCheck;
-    private RequestCycleFactory newRequestCycleFactory;
-    private SessionFactory newSessionFactory;
-
-    public SecureWebApplication(final IAuthorizationStrategy authorizationStrategyParam, final IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListenerParam, final SecurityCheck securityCheckParam, final RequestCycleFactory newRequestCycleFactoryParam, final SessionFactory newSessionFactoryParam) {
-        authorizationStrategy = authorizationStrategyParam;
-        unauthorizedComponentInstantiationListener = unauthorizedComponentInstantiationListenerParam;
-        securityCheck = securityCheckParam;
-        newRequestCycleFactory = newRequestCycleFactoryParam;
-        newSessionFactory = newSessionFactoryParam;
-    }
-
-    public SecureWebApplication() {
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        if (authorizationStrategy != null) {
-            getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
-            getSecuritySettings().setUnauthorizedComponentInstantiationListener(unauthorizedComponentInstantiationListener);
-        }
-    }
 
     public static SecureWebApplication get() {
         return (SecureWebApplication) Application.get();
@@ -60,63 +33,7 @@ public abstract class SecureWebApplication extends WebApplication {
 
     @Override
     public Session newSession(final Request request, final Response response) {
-        Session session;
-        if (newSessionFactory != null) {
-            session = newSessionFactory.newSession(request, response);
-        } else {
-            session = new SecureSession(request);
-        }
+        final Session session = new SecureSession(request);
         return session;
-    }
-
-    @Override
-    public RequestCycle newRequestCycle(final Request request, final Response response) {
-        RequestCycle rc = null;
-        if (newRequestCycleFactory != null) {
-            rc = newRequestCycleFactory.newRequestCycle(request, response);
-        } else {
-            rc = super.newRequestCycle(request, response);
-        }
-        return rc;
-    }
-
-    public SecurityCheck getSecurityCheck() {
-        return securityCheck;
-    }
-
-    public void setSecurityCheck(final SecurityCheck securityCheckParam) {
-        securityCheck = securityCheckParam;
-    }
-
-    public SessionFactory getNewSessionFactory() {
-        return newSessionFactory;
-    }
-
-    public void setNewSessionFactory(final SessionFactory newSessionFactoryParam) {
-        newSessionFactory = newSessionFactoryParam;
-    }
-
-    public RequestCycleFactory getNewRequestCycleFactory() {
-        return newRequestCycleFactory;
-    }
-
-    public void setNewRequestCycleFactory(final RequestCycleFactory newRequestCycleFactoryParam) {
-        newRequestCycleFactory = newRequestCycleFactoryParam;
-    }
-
-    public IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener() {
-        return unauthorizedComponentInstantiationListener;
-    }
-
-    public void setUnauthorizedComponentInstantiationListener(final IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListenerParam) {
-        unauthorizedComponentInstantiationListener = unauthorizedComponentInstantiationListenerParam;
-    }
-
-    public IAuthorizationStrategy getAuthorizationStrategy() {
-        return authorizationStrategy;
-    }
-
-    public void setAuthorizationStrategy(final IAuthorizationStrategy authorizationStrategyParam) {
-        authorizationStrategy = authorizationStrategyParam;
     }
 }

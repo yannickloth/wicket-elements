@@ -71,12 +71,6 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-spring</artifactId>
-                <version>${wicketVersion}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>2.5</version>
@@ -91,12 +85,6 @@
             <dependency>
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-web</artifactId>
-                <version>1.1.0</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-spring</artifactId>
                 <version>1.1.0</version>
                 <scope>compile</scope>
             </dependency>
@@ -126,10 +114,6 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
