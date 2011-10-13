@@ -3,3 +3,13 @@
 /wicket-elements/components/target/
 /wicket-elements/security/target/
 /wicket-elements/security-shiro/target/
+/.settings/
+/library/target/
+/library/.settings/
+/components/.settings/
+/components/target/
+/security/.settings/
+/security/target/
+/security-shiro/.settings/
+/security-shiro/target/
+/parent/.settings/
