@@ -1,20 +1,20 @@
-package com.googlecode.wicketelements.components.togglepane;
+package com.googlecode.wicketelements.components.accordion;
 
 import java.util.EventObject;
 
-public class TogglePaneModelEvent extends EventObject {
+public class AccordionStateEvent<T extends AccordionState> extends EventObject {
     /**
      * Constructs a prototypical Event.
      *
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException if source is null.
      */
-    public TogglePaneModelEvent(final TogglePaneModel source) {
+    public AccordionStateEvent(final T source) {
         super(source);
     }
 
     @Override
-    public TogglePaneModel getSource() {
-        return (TogglePaneModel) super.getSource();
+    public T getSource() {
+        return (T) super.getSource();
     }
 }
