@@ -4,15 +4,15 @@ import com.googlecode.jbp.common.requirements.Reqs;
 import com.googlecode.wicketelements.components.accordion.ui.Accordion;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneState;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneStateEvent;
-import com.googlecode.wicketelements.components.togglepane.TogglePaneStateListener;
 import com.googlecode.wicketelements.components.togglepane.ui.TogglePane;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultAccordionState implements AccordionState, TogglePaneStateListener {
+public class DefaultAccordionState implements AccordionState {
     boolean maximumOneTogglePaneExpanded;
     private Accordion accordion;
-    private List<TogglePaneState> expandedTogglePaneStates;
+    private List<TogglePaneState> expandedTogglePaneStates = new ArrayList<TogglePaneState>();
 
     public DefaultAccordionState(final Accordion accordionParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(accordionParam, "Accordion must not be null.");
@@ -82,8 +82,8 @@ public class DefaultAccordionState implements AccordionState, TogglePaneStateLis
                 Reqs.PRE_COND.Logic.requireTrue(expandedTogglePaneStates.size() <= 1, "There must be maximum one expanded pane.");
                 for (final TogglePaneState current : expandedTogglePaneStates) {
                     current.toggleContent();
-                    expandedTogglePaneStates.remove(current);
                 }
+                expandedTogglePaneStates.clear();
             }
             expandedTogglePaneStates.add(stateEventParam.getSource());
             Reqs.POST_COND.Logic.requireTrue(expandedTogglePaneStates.size() == 1, "There must be exactly one expanded pane.");

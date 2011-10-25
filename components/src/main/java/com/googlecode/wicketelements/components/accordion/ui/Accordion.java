@@ -30,6 +30,7 @@ public class Accordion extends Panel {
         Reqs.PRE_COND.Logic.requireTrue(index < togglePanes.size(), "Index must be smaller than value returned by togglePanesQuantity()");
         togglePanes.add(index, togglePaneParam);
         togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
+        togglePaneParam.getTogglePaneState().addEventListener(state);
     }
 
     public void addTogglePane(final TogglePane togglePaneParam) {
@@ -37,6 +38,7 @@ public class Accordion extends Panel {
         Reqs.PRE_COND.Logic.requireFalse(togglePanes.contains(togglePaneParam), "Toggle pane must not already be contained in the accordion.");
         togglePanes.add(togglePaneParam);
         togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
+        togglePaneParam.getTogglePaneState().addEventListener(state);
     }
 
     public void removeTogglePane(final TogglePane togglePaneParam) {
@@ -69,5 +71,10 @@ public class Accordion extends Panel {
         };
         add(lv);
         add(AttributeAppenderFactory.newAttributeAppenderForClass("we-accordion"));
+    }
+
+    @Override
+    protected void onBeforeRender() {
+        super.onBeforeRender();
     }
 }

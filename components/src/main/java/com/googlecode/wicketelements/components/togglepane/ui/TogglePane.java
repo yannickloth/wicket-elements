@@ -18,12 +18,12 @@ public abstract class TogglePane extends Panel {
     private Component contentComponent;
     private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
 
-    public void addComponentToUpdateOnAjaxRequest(final Component componentParam) {
+    public final void addComponentToUpdateOnAjaxRequest(final Component componentParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentParam, "Component to update on ajax request must not be null.");
         componentsToUpdateOnAjaxRequest.add(componentParam);
     }
 
-    public void removeComponentToUpdateOnAjaxRequest(final Component componentParam) {
+    public final void removeComponentToUpdateOnAjaxRequest(final Component componentParam) {
         if (componentParam != null) {
             componentsToUpdateOnAjaxRequest.remove(componentParam);
         }
@@ -45,14 +45,27 @@ public abstract class TogglePane extends Panel {
 
     public abstract Component createContentComponent(final String contentWicketIdParam);
 
-    public void handleAjaxOnClickEvent(final AjaxRequestTarget targetParam) {
+    /**
+     * Updates all components that need to be updated in case of an AJAX request.
+     *
+     * @param targetParam
+     */
+    public final void handleAjaxOnClickEvent(final AjaxRequestTarget targetParam) {
         //update state of togglePane
-        getTogglePaneState().toggleContent();
+        handleOnClickEvent();
         //update components that must be updated because of the event
         updateComponentsForAjaxRequest(targetParam);
     }
 
-    public void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
+    /**
+     * Similar to {@code handleAjaxOnClickEvent(AjaxRequestTarget t)} but should be used when the request is not an AJAX request.
+     */
+    public final void handleOnClickEvent() {
+        //update state of togglePane
+        getTogglePaneState().toggleContent();
+    }
+
+    public final void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
         for (final Component current : componentsToUpdateOnAjaxRequest) {
             targetParam.addComponent(current);
         }
@@ -65,6 +78,7 @@ public abstract class TogglePane extends Panel {
         contentComponent = createContentComponent(CONTENT_WICKET_ID);
         add(titleComponent);
         add(contentComponent);
+        contentComponent.setVisible(false);
         setOutputMarkupId(true);
         state = new DefaultTogglePaneState(this);
     }
