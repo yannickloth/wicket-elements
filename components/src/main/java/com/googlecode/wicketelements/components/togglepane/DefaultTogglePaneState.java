@@ -22,6 +22,9 @@ import com.googlecode.wicketelements.components.togglepane.ui.TogglePane;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Default implementation of a toggle pane's state.
+ */
 public class DefaultTogglePaneState implements TogglePaneState {
     private final List<TogglePaneStateListener> listeners = new ArrayList<TogglePaneStateListener>();
     private final TogglePane togglePane;

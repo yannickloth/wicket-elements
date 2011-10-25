@@ -18,6 +18,9 @@ package com.googlecode.wicketelements.components.togglepane;
 
 import java.util.EventObject;
 
+/**
+ * Event class fired when the state of a toggle pane changes.
+ */
 public class TogglePaneStateEvent extends EventObject {
     /**
      * Constructs a prototypical Event.

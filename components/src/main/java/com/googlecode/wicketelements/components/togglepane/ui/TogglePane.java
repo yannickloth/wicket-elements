@@ -26,6 +26,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Base class to implement a toggle pane.
+ */
 public abstract class TogglePane extends Panel {
     private static final String TITLE_WICKET_ID = "title";
     private static final String CONTENT_WICKET_ID = "content";
@@ -34,32 +37,71 @@ public abstract class TogglePane extends Panel {
     private Component contentComponent;
     private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
 
+    /**
+     * Add a component that should be refreshed when the toggle pane is updated using an AJAX request.
+     * Use this if other components must be updated consequently to the update of the toggle panel.
+     *
+     * @param componentParam The component that must be added to the list of updated components.
+     */
     public final void addComponentToUpdateOnAjaxRequest(final Component componentParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentParam, "Component to update on ajax request must not be null.");
         componentsToUpdateOnAjaxRequest.add(componentParam);
     }
 
+    /**
+     * Removes the component from the list of components that must be updated when the toggle pane is updated
+     * with an AJAX request.
+     *
+     * @param componentParam
+     */
     public final void removeComponentToUpdateOnAjaxRequest(final Component componentParam) {
         if (componentParam != null) {
             componentsToUpdateOnAjaxRequest.remove(componentParam);
         }
     }
 
+    /**
+     * Returns the title component.
+     *
+     * @return The title component.
+     */
     public final Component getTitleComponent() {
         return titleComponent;
     }
 
+    /**
+     * Returns the content component.
+     *
+     * @return The content component.
+     */
     public final Component getContentComponent() {
         return contentComponent;
     }
 
+    /**
+     * Returns the state of the toggle pane.
+     *
+     * @return The {@code TogglePaneState} associated to this toggle pane.
+     */
     public final TogglePaneState getTogglePaneState() {
         return state;
     }
 
-    public abstract Component createTitleComponent(final String titleWicketIdParam);
+    /**
+     * Implement this method to provide the title component of this toggle pane.
+     *
+     * @param titleWicketIdParam The Wicket id that the title component must have.
+     * @return The created component.
+     */
+    protected abstract Component createTitleComponent(final String titleWicketIdParam);
 
-    public abstract Component createContentComponent(final String contentWicketIdParam);
+    /**
+     * Implement this method to provide the content component of this toggle pane.
+     *
+     * @param contentWicketIdParam The Wicket id that the content component must have.
+     * @return The created component.
+     */
+    protected abstract Component createContentComponent(final String contentWicketIdParam);
 
     /**
      * Updates all components that need to be updated in case of an AJAX request.
@@ -81,13 +123,18 @@ public abstract class TogglePane extends Panel {
         getTogglePaneState().toggleContent();
     }
 
-    public final void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
+    private final void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
         for (final Component current : componentsToUpdateOnAjaxRequest) {
             targetParam.addComponent(current);
         }
         targetParam.addComponent(this);
     }
 
+    /**
+     * Creates a toggle pane with the specified Wicket id.
+     *
+     * @param idParam The toggle pane's Wicket id.
+     */
     public TogglePane(final String idParam) {
         super(idParam);
         titleComponent = createTitleComponent(TITLE_WICKET_ID);

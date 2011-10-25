@@ -16,12 +16,35 @@
  */
 package com.googlecode.wicketelements.components.togglepane;
 
+/**
+ * Listener for toggle pane state changes.
+ */
 public interface TogglePaneStateListener {
+    /**
+     * Fired when the toggle pane is enabled.
+     *
+     * @param stateEventParam The event object.
+     */
     void togglePaneEnabled(final TogglePaneStateEvent stateEventParam);
 
+    /**
+     * Fired when the toggle pane is disabled.
+     *
+     * @param stateEventParam The event object.
+     */
     void togglePaneDisabled(TogglePaneStateEvent stateEventParam);
 
+    /**
+     * Fired when the toggle pane is collapsed.
+     *
+     * @param stateEventParam The event object.
+     */
     void togglePaneCollapsed(TogglePaneStateEvent stateEventParam);
 
+    /**
+     * Fired when the toggle pane is expanded.
+     *
+     * @param stateEventParam The event object.
+     */
     void togglePaneExpanded(TogglePaneStateEvent stateEventParam);
 }
