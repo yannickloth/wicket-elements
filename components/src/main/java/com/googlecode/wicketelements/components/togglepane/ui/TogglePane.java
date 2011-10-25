@@ -13,7 +13,7 @@ import java.util.Set;
 public abstract class TogglePane extends Panel {
     private static final String TITLE_WICKET_ID = "title";
     private static final String CONTENT_WICKET_ID = "content";
-    private TogglePaneState state;
+    private final TogglePaneState state;
     private Component titleComponent;
     private Component contentComponent;
     private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();

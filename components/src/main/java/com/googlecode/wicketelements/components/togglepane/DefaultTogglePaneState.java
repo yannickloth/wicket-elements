@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DefaultTogglePaneState implements TogglePaneState {
     private final List<TogglePaneStateListener> listeners = new ArrayList<TogglePaneStateListener>();
-    private TogglePane togglePane;
+    private final TogglePane togglePane;
 
     public DefaultTogglePaneState(final TogglePane togglePaneParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(togglePaneParam, "Toggle pane must not be null.");

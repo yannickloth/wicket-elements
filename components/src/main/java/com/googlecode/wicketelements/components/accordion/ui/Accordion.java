@@ -17,8 +17,8 @@ import java.util.List;
 public class Accordion extends Panel {
     private static final String TOGGLE_PANES_LIST_WICKET_ID = "we-accordion-togglePanes";
     private static final String TOGGLE_PANES_LIST_ELEMENT_WICKET_ID = "we-accordion-togglePane";
-    private List<TogglePane> togglePanes = new ArrayList<TogglePane>();
-    private AccordionState state;
+    private final List<TogglePane> togglePanes = new ArrayList<TogglePane>();
+    private final AccordionState state;
 
     public static final String getTogglePanesListElementWicketId() {
         return TOGGLE_PANES_LIST_ELEMENT_WICKET_ID;
@@ -54,7 +54,7 @@ public class Accordion extends Panel {
         return state;
     }
 
-    public final List<? extends TogglePane> getTogglePanes() {
+    public final List<TogglePane> getTogglePanes() {
         return Collections.unmodifiableList(togglePanes);
     }
 
