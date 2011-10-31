@@ -19,6 +19,7 @@ package com.googlecode.wicketelements.components.togglepane.ui;
 import com.googlecode.jbp.common.requirements.Reqs;
 import com.googlecode.wicketelements.components.togglepane.DefaultTogglePaneState;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneState;
+import com.googlecode.wicketelements.components.togglepane.TogglePaneStateListener;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -29,13 +30,46 @@ import java.util.Set;
 /**
  * Base class to implement a toggle pane.
  */
-public abstract class TogglePane extends Panel {
+public abstract class TogglePane extends Panel implements TogglePaneState {
     private static final String TITLE_WICKET_ID = "title";
     private static final String CONTENT_WICKET_ID = "content";
     private final TogglePaneState state;
     private Component titleComponent;
     private Component contentComponent;
     private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
+
+    public void toggleContent() {
+        state.toggleContent();
+    }
+
+    public void toggleEnableState() {
+        state.toggleEnableState();
+    }
+
+    public boolean isCollapsed() {
+        return state.isCollapsed();
+    }
+
+    public boolean isExpanded() {
+        return state.isExpanded();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return state.isEnabled();
+    }
+
+    public boolean isDisabled() {
+        return state.isDisabled();
+    }
+
+    public void addEventListener(final TogglePaneStateListener togglePaneStateListenerParam) {
+        state.addEventListener(togglePaneStateListenerParam);
+    }
+
+    public void removeEventListener(final TogglePaneStateListener togglePaneStateListenerParam) {
+        state.removeEventListener(togglePaneStateListenerParam);
+    }
 
     /**
      * Add a component that should be refreshed when the toggle pane is updated using an AJAX request.
@@ -79,15 +113,6 @@ public abstract class TogglePane extends Panel {
     }
 
     /**
-     * Returns the state of the toggle pane.
-     *
-     * @return The {@code TogglePaneState} associated to this toggle pane.
-     */
-    public final TogglePaneState getTogglePaneState() {
-        return state;
-    }
-
-    /**
      * Implement this method to provide the title component of this toggle pane.
      *
      * @param titleWicketIdParam The Wicket id that the title component must have.
@@ -120,7 +145,7 @@ public abstract class TogglePane extends Panel {
      */
     public final void handleOnClickEvent() {
         //update state of togglePane
-        getTogglePaneState().toggleContent();
+        toggleContent();
     }
 
     private final void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
