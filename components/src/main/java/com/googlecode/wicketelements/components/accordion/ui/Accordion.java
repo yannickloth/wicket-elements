@@ -86,16 +86,24 @@ public class Accordion extends Panel implements AccordionState {
         Reqs.PRE_COND.Logic.requireFalse(togglePanes.contains(togglePaneParam), "Toggle pane must not already be contained in the accordion.");
         Reqs.PRE_COND.Logic.requireTrue(index < togglePanes.size(), "Index must be smaller than value returned by togglePanesQuantity()");
         togglePanes.add(index, togglePaneParam);
-        togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
-        togglePaneParam.addEventListener(this);
+        doOnAddTogglePane(togglePaneParam);
     }
 
     public void addTogglePane(final TogglePane togglePaneParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(togglePaneParam, "Toggle pane must not be null.");
         Reqs.PRE_COND.Logic.requireFalse(togglePanes.contains(togglePaneParam), "Toggle pane must not already be contained in the accordion.");
         togglePanes.add(togglePaneParam);
+        doOnAddTogglePane(togglePaneParam);
+    }
+
+    private void doOnAddTogglePane(final TogglePane togglePaneParam) {
         togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
+        boolean wasExpanded = togglePaneParam.isExpanded();
+        //if it's expanded, collapse and then re-expand it to trigger the event listener
+        //obviously, the last added TogglePane that is already expanded will be the expanded one in the accordion
+        togglePaneParam.toggleContent();
         togglePaneParam.addEventListener(this);
+        togglePaneParam.toggleContent();
     }
 
     public void removeTogglePane(final TogglePane togglePaneParam) {
