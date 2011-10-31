@@ -20,6 +20,7 @@ package com.googlecode.wicketelements.components.accordion.ui;
 import com.googlecode.jbp.common.requirements.Reqs;
 import com.googlecode.wicketelements.components.accordion.AccordionState;
 import com.googlecode.wicketelements.components.accordion.DefaultAccordionState;
+import com.googlecode.wicketelements.components.togglepane.TogglePaneStateEvent;
 import com.googlecode.wicketelements.components.togglepane.ui.TogglePane;
 import com.googlecode.wicketelements.library.behavior.AttributeAppenderFactory;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -30,11 +31,51 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Accordion extends Panel {
+public class Accordion extends Panel implements AccordionState {
     private static final String TOGGLE_PANES_LIST_WICKET_ID = "we-accordion-togglePanes";
     private static final String TOGGLE_PANES_LIST_ELEMENT_WICKET_ID = "we-accordion-togglePane";
     private final List<TogglePane> togglePanes = new ArrayList<TogglePane>();
     private final AccordionState state;
+
+    public void togglePaneEnabled(final TogglePaneStateEvent stateEventParam) {
+        state.togglePaneEnabled(stateEventParam);
+    }
+
+    public void togglePaneDisabled(final TogglePaneStateEvent stateEventParam) {
+        state.togglePaneDisabled(stateEventParam);
+    }
+
+    public void togglePaneCollapsed(final TogglePaneStateEvent stateEventParam) {
+        state.togglePaneCollapsed(stateEventParam);
+    }
+
+    public void togglePaneExpanded(final TogglePaneStateEvent stateEventParam) {
+        state.togglePaneExpanded(stateEventParam);
+    }
+
+    public boolean isMaximumOneTogglePaneExpanded() {
+        return state.isMaximumOneTogglePaneExpanded();
+    }
+
+    public void setMaximumOneTogglePaneExpanded(final boolean maximumOneTogglePaneExpandedParam) {
+        state.setMaximumOneTogglePaneExpanded(maximumOneTogglePaneExpandedParam);
+    }
+
+    public void disableAllTogglePanes() {
+        state.disableAllTogglePanes();
+    }
+
+    public void enableAllTogglePanes() {
+        state.enableAllTogglePanes();
+    }
+
+    public void collapseAllTogglePanes() {
+        state.collapseAllTogglePanes();
+    }
+
+    public void expandAllTogglePanes() {
+        state.expandAllTogglePanes();
+    }
 
     public static final String getTogglePanesListElementWicketId() {
         return TOGGLE_PANES_LIST_ELEMENT_WICKET_ID;
@@ -46,7 +87,7 @@ public class Accordion extends Panel {
         Reqs.PRE_COND.Logic.requireTrue(index < togglePanes.size(), "Index must be smaller than value returned by togglePanesQuantity()");
         togglePanes.add(index, togglePaneParam);
         togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
-        togglePaneParam.getTogglePaneState().addEventListener(state);
+        togglePaneParam.addEventListener(this);
     }
 
     public void addTogglePane(final TogglePane togglePaneParam) {
@@ -54,20 +95,17 @@ public class Accordion extends Panel {
         Reqs.PRE_COND.Logic.requireFalse(togglePanes.contains(togglePaneParam), "Toggle pane must not already be contained in the accordion.");
         togglePanes.add(togglePaneParam);
         togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
-        togglePaneParam.getTogglePaneState().addEventListener(state);
+        togglePaneParam.addEventListener(this);
     }
 
     public void removeTogglePane(final TogglePane togglePaneParam) {
         togglePanes.remove(togglePaneParam);
         togglePaneParam.removeComponentToUpdateOnAjaxRequest(this);
+        togglePaneParam.removeEventListener(this);
     }
 
     public int togglePanesQuantity() {
         return togglePanes.size();
-    }
-
-    public final AccordionState getAccordionState() {
-        return state;
     }
 
     public final List<TogglePane> getTogglePanes() {

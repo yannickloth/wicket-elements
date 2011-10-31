@@ -46,36 +46,32 @@ public class DefaultAccordionState implements AccordionState {
 
     public void disableAllTogglePanes() {
         for (final TogglePane current : accordion.getTogglePanes()) {
-            final TogglePaneState currentState = current.getTogglePaneState();
-            if (currentState.isEnabled()) {
-                currentState.toggleEnableState();
+            if (current.isEnabled()) {
+                current.toggleEnableState();
             }
         }
     }
 
     public void enableAllTogglePanes() {
         for (final TogglePane current : accordion.getTogglePanes()) {
-            final TogglePaneState currentState = current.getTogglePaneState();
-            if (currentState.isDisabled()) {
-                currentState.toggleEnableState();
+            if (current.isDisabled()) {
+                current.toggleEnableState();
             }
         }
     }
 
     public void collapseAllTogglePanes() {
         for (final TogglePane current : accordion.getTogglePanes()) {
-            final TogglePaneState currentState = current.getTogglePaneState();
-            if (currentState.isExpanded()) {
-                currentState.toggleContent();
+            if (current.isExpanded()) {
+                current.toggleContent();
             }
         }
     }
 
     public void expandAllTogglePanes() {
         for (final TogglePane current : accordion.getTogglePanes()) {
-            final TogglePaneState currentState = current.getTogglePaneState();
-            if (currentState.isCollapsed()) {
-                currentState.toggleContent();
+            if (current.isCollapsed()) {
+                current.toggleContent();
             }
         }
     }
@@ -113,7 +109,7 @@ public class DefaultAccordionState implements AccordionState {
         boolean belongs = false;
         final Iterator<TogglePane> it = accordion.getTogglePanes().iterator();
         while (!belongs && it.hasNext()) {
-            belongs = togglePaneStateParam.equals(it.next().getTogglePaneState());
+            belongs = togglePaneStateParam.equals(it.next());
         }
         return belongs;
     }
