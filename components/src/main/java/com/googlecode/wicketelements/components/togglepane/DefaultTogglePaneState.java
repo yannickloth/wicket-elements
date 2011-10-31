@@ -55,7 +55,7 @@ public class DefaultTogglePaneState implements TogglePaneState {
         togglePane.getContentComponent().setVisible(!visibility);
 
         //send event to listeners
-        final TogglePaneStateEvent event = new TogglePaneStateEvent(this);
+        final TogglePaneStateEvent event = new TogglePaneStateEvent(togglePane);
         if (visibility) {
             for (final TogglePaneStateListener listener : listeners) {
                 listener.togglePaneCollapsed(event);
@@ -72,7 +72,7 @@ public class DefaultTogglePaneState implements TogglePaneState {
         togglePane.getTitleComponent().setEnabled(!enabled);
 
         //send event to listeners
-        final TogglePaneStateEvent event = new TogglePaneStateEvent(this);
+        final TogglePaneStateEvent event = new TogglePaneStateEvent(togglePane);
         if (enabled) {
             for (final TogglePaneStateListener listener : listeners) {
                 listener.togglePaneDisabled(event);
