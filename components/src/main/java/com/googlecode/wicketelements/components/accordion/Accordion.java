@@ -14,14 +14,12 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.components.accordion.ui;
+package com.googlecode.wicketelements.components.accordion;
 
 
 import com.googlecode.jbp.common.requirements.Reqs;
-import com.googlecode.wicketelements.components.accordion.AccordionState;
-import com.googlecode.wicketelements.components.accordion.DefaultAccordionState;
+import com.googlecode.wicketelements.components.togglepane.TogglePane;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneStateEvent;
-import com.googlecode.wicketelements.components.togglepane.ui.TogglePane;
 import com.googlecode.wicketelements.library.behavior.AttributeAppenderFactory;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;

@@ -17,16 +17,15 @@
 package com.googlecode.wicketelements.components.accordion;
 
 import com.googlecode.jbp.common.requirements.Reqs;
-import com.googlecode.wicketelements.components.accordion.ui.Accordion;
+import com.googlecode.wicketelements.components.togglepane.TogglePane;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneState;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneStateEvent;
-import com.googlecode.wicketelements.components.togglepane.ui.TogglePane;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DefaultAccordionState implements AccordionState {
+class DefaultAccordionState implements AccordionState {
     boolean maximumOneTogglePaneExpanded;
     private final Accordion accordion;
     private final List<TogglePaneState> expandedTogglePaneStates = new ArrayList<TogglePaneState>();

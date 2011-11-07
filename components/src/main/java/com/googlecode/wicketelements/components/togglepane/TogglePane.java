@@ -14,7 +14,7 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.components.togglepane.ui;
+package com.googlecode.wicketelements.components.togglepane;
 
 import com.googlecode.jbp.common.requirements.Reqs;
 import com.googlecode.wicketelements.components.togglepane.DefaultTogglePaneState;
