@@ -17,10 +17,8 @@
 package com.googlecode.wicketelements.components.togglepane;
 
 import com.googlecode.jbp.common.requirements.Reqs;
-import com.googlecode.wicketelements.components.togglepane.DefaultTogglePaneState;
-import com.googlecode.wicketelements.components.togglepane.TogglePaneState;
-import com.googlecode.wicketelements.components.togglepane.TogglePaneStateListener;
 import com.googlecode.wicketelements.library.behavior.AttributeAppenderFactory;
+import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -35,6 +33,10 @@ import java.util.Set;
 public abstract class TogglePane extends Panel implements TogglePaneState {
     private static final String TITLE_WICKET_ID = "title";
     private static final String CONTENT_WICKET_ID = "content";
+    private static final String CSS_CLASS_TOGGLEPANE_EXPANDED = "we-togglePane-expanded";
+    private static final String CSS_CLASS_TOGGLEPANE = "we-togglePane";
+    private static final String CSS_CLASS_TOGGLEPANE_TITLE = "we-togglePaneTitle";
+    private static final String CSS_CLASS_TOGGLEPANE_CONTENT = "we-togglePaneBody";
     private final TogglePaneState state;
     private Component titleComponent;
     private Component contentComponent;
@@ -179,8 +181,17 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
+        addCssClasses();
+    }
+
+    private void addCssClasses() {
         if (isExpanded()) {
-            container.add(AttributeAppenderFactory.newAttributeAppenderForClass("we-togglepane-expanded"));
+            container.add(AttributeModifierFactory.newAttributeModifierForClass(CSS_CLASS_TOGGLEPANE));
+            container.add(AttributeAppenderFactory.newAttributeAppenderForClass(CSS_CLASS_TOGGLEPANE_EXPANDED));
+        } else if (isCollapsed()) {
+            container.add(AttributeModifierFactory.newAttributeModifierForClass(CSS_CLASS_TOGGLEPANE));
         }
+        titleComponent.add(AttributeModifierFactory.newAttributeModifierForClass(CSS_CLASS_TOGGLEPANE_TITLE));
+        contentComponent.add(AttributeModifierFactory.newAttributeModifierForClass(CSS_CLASS_TOGGLEPANE_CONTENT));
     }
 }
