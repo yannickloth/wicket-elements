@@ -20,8 +20,10 @@ import com.googlecode.jbp.common.requirements.Reqs;
 import com.googlecode.wicketelements.components.togglepane.DefaultTogglePaneState;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneState;
 import com.googlecode.wicketelements.components.togglepane.TogglePaneStateListener;
+import com.googlecode.wicketelements.library.behavior.AttributeAppenderFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import java.util.HashSet;
@@ -37,6 +39,7 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
     private Component titleComponent;
     private Component contentComponent;
     private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
+    private final WebMarkupContainer container;
 
     public void toggleContent() {
         state.toggleContent();
@@ -164,10 +167,20 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
         super(idParam);
         titleComponent = createTitleComponent(TITLE_WICKET_ID);
         contentComponent = createContentComponent(CONTENT_WICKET_ID);
-        add(titleComponent);
-        add(contentComponent);
+        container = new WebMarkupContainer("togglePane-container");
+        container.add(titleComponent);
+        container.add(contentComponent);
         contentComponent.setVisible(false);
         setOutputMarkupId(true);
         state = new DefaultTogglePaneState(this);
+        add(container);
+    }
+
+    @Override
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        if (isExpanded()) {
+            container.add(AttributeAppenderFactory.newAttributeAppenderForClass("we-togglepane-expanded"));
+        }
     }
 }
