@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.googlecode.wicketelements</groupId>
     <artifactId>security-shiro</artifactId>
-    <version>1.4.5-SNAPSHOT</version>
+    <version>1.4.5</version>
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.googlecode.wicketelements</groupId>
-        <version>1.4.5-SNAPSHOT</version>
+        <version>1.4.5</version>
         <relativePath>../parent</relativePath>
     </parent>
     <packaging>jar</packaging>
