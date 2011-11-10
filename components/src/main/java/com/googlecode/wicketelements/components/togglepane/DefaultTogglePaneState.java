@@ -27,6 +27,7 @@ import java.util.List;
 class DefaultTogglePaneState implements TogglePaneState {
     private final List<TogglePaneStateListener> listeners = new ArrayList<TogglePaneStateListener>();
     private final TogglePane togglePane;
+    private boolean visible = true;
 
     public DefaultTogglePaneState(final TogglePane togglePaneParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(togglePaneParam, "Toggle pane must not be null.");
@@ -50,18 +51,19 @@ class DefaultTogglePaneState implements TogglePaneState {
     }
 
     public final void toggleContent() {
-        final boolean visibility = togglePane.getContentComponent().isVisible();
-        togglePane.getContentComponent().setVisible(!visibility);
-
+        visible = !visible;
+        if (!togglePane.isUsingCssToToggleContent()) {
+            togglePane.getContentComponent().setVisible(visible);
+        }
         //send event to listeners
         final TogglePaneStateEvent event = new TogglePaneStateEvent(togglePane);
-        if (visibility) {
+        if (visible) {
             for (final TogglePaneStateListener listener : listeners) {
-                listener.togglePaneCollapsed(event);
+                listener.togglePaneExpanded(event);
             }
         } else {
             for (final TogglePaneStateListener listener : listeners) {
-                listener.togglePaneExpanded(event);
+                listener.togglePaneCollapsed(event);
             }
         }
     }
@@ -88,7 +90,7 @@ class DefaultTogglePaneState implements TogglePaneState {
     }
 
     public final boolean isExpanded() {
-        return togglePane.getContentComponent().isVisible();
+        return visible;
     }
 
     public final boolean isEnabled() {

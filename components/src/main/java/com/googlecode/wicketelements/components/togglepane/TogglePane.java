@@ -21,8 +21,11 @@ import com.googlecode.wicketelements.library.behavior.AttributeAppenderFactory;
 import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +45,15 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
     private Component contentComponent;
     private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
     private final WebMarkupContainer container;
+    private boolean usingCssToToggleContent;
+
+    public boolean isUsingCssToToggleContent() {
+        return usingCssToToggleContent;
+    }
+
+    public void setUsingCssToToggleContent(final boolean usingCssToToggleContentParam) {
+        usingCssToToggleContent = usingCssToToggleContentParam;
+    }
 
     public void toggleContent() {
         state.toggleContent();
@@ -172,16 +184,25 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
         container = new WebMarkupContainer("togglePane-container");
         container.add(titleComponent);
         container.add(contentComponent);
-        contentComponent.setVisible(false);
         setOutputMarkupId(true);
         state = new DefaultTogglePaneState(this);
         add(container);
+        add(CSSPackageResource.getHeaderContribution(TogglePane.class,
+                "TogglePane.css", "screen, projection"));
     }
 
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
         addCssClasses();
+        if (usingCssToToggleContent) {
+            contentComponent.add(new AttributeAppender("class", true, new AbstractReadOnlyModel<Object>() {
+                @Override
+                public Object getObject() {
+                    return state.isExpanded() ? "displayBlock" : "displayNone";
+                }
+            }, " "));
+        }
     }
 
     private void addCssClasses() {
