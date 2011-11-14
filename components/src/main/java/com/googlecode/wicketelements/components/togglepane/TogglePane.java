@@ -203,6 +203,9 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
                 }
             }, " "));
         }
+        if (state.isDisabled()) {
+            add(AttributeAppenderFactory.newAttributeAppenderForClass("we-togglePane-disabled"));
+        }
     }
 
     private void addCssClasses() {
