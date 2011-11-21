@@ -4,11 +4,11 @@
     <groupId>com.googlecode.wicketelements</groupId>
     <artifactId>security</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.7-SNAPSHOT</version>
+    <version>1.4.7</version>
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.googlecode.wicketelements</groupId>
-        <version>1.4.7-SNAPSHOT</version>
+        <version>1.4.7</version>
         <relativePath>../parent</relativePath>
     </parent>
     <name>Wicket Elements Security</name>
