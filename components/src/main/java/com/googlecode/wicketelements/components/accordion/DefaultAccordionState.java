@@ -98,9 +98,11 @@ class DefaultAccordionState implements AccordionState {
             for (final TogglePaneState current : expandedTogglePanesStatesCopy) {
                 current.toggleContent(); //collapse all expanded panes
             }
+            expandedTogglePaneStates.add(stateEventParam.getSource());
             Reqs.POST_COND.Logic.requireTrue(expandedTogglePaneStates.size() == 1, "There must be exactly one expanded pane.");
+        } else {
+            expandedTogglePaneStates.add(stateEventParam.getSource());
         }
-        expandedTogglePaneStates.add(stateEventParam.getSource());
     }
 
     private boolean isTogglePaneBelongingToThisAccordion(final TogglePaneState togglePaneStateParam) {
