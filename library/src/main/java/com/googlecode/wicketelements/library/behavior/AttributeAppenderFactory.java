@@ -16,32 +16,56 @@
  */
 package com.googlecode.wicketelements.library.behavior;
 
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.model.Model;
 
 /**
  * Factory to create an attribute appender for the attribute <code>class</code>.
- *
+ * 
  * @author Yannick LOTH
  */
 public final class AttributeAppenderFactory {
 
-    private static final String WHITE_SPACE = " ";
-    private static final String CLASS_ATTRIBUTE = "class";
+	private static final String WHITE_SPACE = " ";
+	private static final String CLASS_ATTRIBUTE = "class";
 
-    private AttributeAppenderFactory() {
-    }
+	private AttributeAppenderFactory() {
+	}
 
-    /**
-     * Instanciates a new attribute appender for the attribute <code>class</code>.
-     *
-     * @param cssClassNameParam The name of the CSS class to add to the tag. Must not be blank.
-     * @return The new attribute appender.
-     */
-    public static AttributeAppender newAttributeAppenderForClass(final String cssClassNameParam) {
-        PARAM_REQ.String.requireNotBlank(cssClassNameParam, "The CSS class name parameter must not be null.");
-        return new AttributeAppender(CLASS_ATTRIBUTE, new Model<String>(cssClassNameParam.trim()), WHITE_SPACE);
-    }
+	/**
+	 * Instantiates a new attribute appender for the attribute
+	 * <code>class</code>.
+	 * 
+	 * @param cssClassNameParam
+	 *            The name of the CSS class to add to the tag. Must not be
+	 *            blank.
+	 * @return The new attribute appender.
+	 */
+	public static AttributeAppender newAttributeAppenderForClass(
+			final String cssClassNameParam) {
+		PARAM_REQ.String.requireNotBlank(cssClassNameParam,
+				"The CSS class name parameter must not be null.");
+		return new AttributeAppender(CLASS_ATTRIBUTE, new Model<String>(
+				cssClassNameParam.trim()), WHITE_SPACE);
+	}
+
+	/**
+	 * Instantiates a new attribute appender for the attribute
+	 * <code>class</code>.
+	 * 
+	 * @param cssClassNameModelParam
+	 *            The model with the name of the CSS class to add to the tag.
+	 *            Must not be blank.
+	 * @return The new attribute appender.
+	 */
+	public static AttributeAppender newAttributeAppenderForClass(
+			final IModel<String> cssClassNameModelParam) {
+		PARAM_REQ.Object.requireNotNull(cssClassNameModelParam,
+				"The CSS class name model parameter must not be null.");
+		return new AttributeAppender(CLASS_ATTRIBUTE, cssClassNameModelParam,
+				WHITE_SPACE);
+	}
 }
