@@ -17,11 +17,11 @@
 package com.googlecode.wicketelements.security.constraints.action;
 
 import com.googlecode.wicketelements.security.SecurityConstraint;
-import org.apache.wicket.Component;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 public class AlwaysSatisfiedActionConstraint implements SecurityConstraint {
 
-    public <T extends Component> boolean isSatisfiedConstraint(final T componentClassParam) {
+    public <T extends IRequestableComponent> boolean isSatisfiedConstraint(final T componentClassParam) {
         return true;
     }
 }

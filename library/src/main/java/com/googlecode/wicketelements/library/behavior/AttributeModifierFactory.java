@@ -46,7 +46,7 @@ public final class AttributeModifierFactory {
 			final String altText) {
 		PARAM_REQ.String.requireNotBlank(altText,
 				"The alt attribute parameter must not be null.");
-		return new AttributeModifier(ALT_ATTRIBUTE, true, new Model<String>(
+		return new AttributeModifier(ALT_ATTRIBUTE, new Model<String>(
 				altText));
 	}
 
@@ -62,7 +62,7 @@ public final class AttributeModifierFactory {
 			final IModel<String> altTextModel) {
 		PARAM_REQ.Object.requireNotNull(altTextModel,
 				"The alt attribute model parameter must not be null.");
-		return new AttributeModifier(ALT_ATTRIBUTE, true, altTextModel);
+		return new AttributeModifier(ALT_ATTRIBUTE, altTextModel);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public final class AttributeModifierFactory {
 			final String srcText) {
 		PARAM_REQ.String.requireNotBlank(srcText,
 				"The src attribute parameter must not be null.");
-		return new AttributeModifier(SRC_ATTRIBUTE, true, new Model<String>(
+		return new AttributeModifier(SRC_ATTRIBUTE, new Model<String>(
 				srcText));
 	}
 
@@ -93,7 +93,7 @@ public final class AttributeModifierFactory {
 			final IModel<String> srcTextModel) {
 		PARAM_REQ.Object.requireNotNull(srcTextModel,
 				"The src attribute model parameter must not be null.");
-		return new AttributeModifier(SRC_ATTRIBUTE, true, srcTextModel);
+		return new AttributeModifier(SRC_ATTRIBUTE, srcTextModel);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public final class AttributeModifierFactory {
 			final String titleText) {
 		PARAM_REQ.String.requireNotBlank(titleText,
 				"The title attribute parameter must not be null.");
-		return new AttributeModifier(TITLE_ATTRIBUTE, true, new Model<String>(
+		return new AttributeModifier(TITLE_ATTRIBUTE, new Model<String>(
 				titleText));
 	}
 
@@ -126,7 +126,7 @@ public final class AttributeModifierFactory {
 			final IModel<String> titleTextModel) {
 		PARAM_REQ.Object.requireNotNull(titleTextModel,
 				"The title attribute model parameter must not be null.");
-		return new AttributeModifier(TITLE_ATTRIBUTE, true, titleTextModel);
+		return new AttributeModifier(TITLE_ATTRIBUTE, titleTextModel);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public final class AttributeModifierFactory {
 			final String cssClassNameParam) {
 		PARAM_REQ.String.requireNotBlank(cssClassNameParam,
 				"The CSS class parameter must not be null.");
-		return new AttributeModifier(CLASS_ATTRIBUTE, true, new Model<String>(
+		return new AttributeModifier(CLASS_ATTRIBUTE, new Model<String>(
 				cssClassNameParam.trim()));
 	}
 
@@ -159,7 +159,7 @@ public final class AttributeModifierFactory {
 			final IModel<String> cssClassModel) {
 		PARAM_REQ.Object.requireNotNull(cssClassModel,
 				"The class attribute model parameter must not be null.");
-		return new AttributeModifier(CLASS_ATTRIBUTE, true, cssClassModel);
+		return new AttributeModifier(CLASS_ATTRIBUTE, cssClassModel);
 	}
 
 	private AttributeModifierFactory() {

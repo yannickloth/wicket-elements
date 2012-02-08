@@ -33,10 +33,6 @@
             <artifactId>jbp-common</artifactId>
         </dependency>
         <dependency>
-            <artifactId>library</artifactId>
-            <groupId>com.googlecode.wicketelements</groupId>
-        </dependency>
-        <dependency>
             <artifactId>security</artifactId>
             <groupId>com.googlecode.wicketelements</groupId>
         </dependency>

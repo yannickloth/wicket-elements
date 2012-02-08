@@ -14,17 +14,14 @@
  *  limitations under the License.
  *  under the License.
  */
-package com.googlecode.wicketelements.components.layouts.flow;
+package com.googlecode.wicketelements.library.behavior;
 
-import com.googlecode.wicketelements.components.lists.ComponentListModel;
-import com.googlecode.wicketelements.components.lists.ComponentListPanel;
+import org.apache.wicket.behavior.Behavior;
+import org.testng.annotations.Test;
 
-/**
- * Layout which lays out components in a single row, starting a new row if its container is not sufficiently
- * wide.
- */
-public class FlowLayout extends ComponentListPanel {
-    public FlowLayout(final String id, final ComponentListModel componentListModelParam) {
-        super(id, componentListModelParam);
+@Test
+public class LessFileBehaviorTest {
+    public void testContributor() {
+        final Behavior b= new LessFileBehavior(LessFileBehavior.class, "testfile.less");
     }
 }

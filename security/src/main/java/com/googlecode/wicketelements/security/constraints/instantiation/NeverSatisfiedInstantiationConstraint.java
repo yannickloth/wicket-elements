@@ -17,11 +17,11 @@
 package com.googlecode.wicketelements.security.constraints.instantiation;
 
 import com.googlecode.wicketelements.security.InstantiationSecurityConstraint;
-import org.apache.wicket.Component;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 public class NeverSatisfiedInstantiationConstraint implements InstantiationSecurityConstraint {
 
-    public <T extends Component> boolean isSatisfiedConstraint(final Class<T> componentClassParam) {
+    public <T extends IRequestableComponent> boolean isSatisfiedConstraint(final Class<T> componentClassParam) {
         return false;
     }
 }

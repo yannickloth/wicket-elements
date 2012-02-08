@@ -16,16 +16,16 @@
  */
 package com.googlecode.wicketelements.components.gravatar;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
+import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.resource.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * This panel shows the user's gravatar avatar, given his email address. If
@@ -70,9 +70,9 @@ public final class GravatarPanel extends Panel {
                         hashString.append(hex.substring(hex.length() - 2));
                     }
                 }
-                final Image imgLocal = new Image(WICKET_ID_GRAVATAR_IMG);
+                final Image imgLocal = new Image(WICKET_ID_GRAVATAR_IMG,(IResource)null);
                 imgLocal.add(AttributeModifierFactory
-                        .newAttributeAppenderForAlt("http://www.gravatar.com/avatar/"
+                        .newAttributeAppenderForSrc("http://www.gravatar.com/avatar/"
                                 + hashString.toString() + DOT_JPG));
                 imgLocal.add(AttributeModifierFactory
                         .newAttributeAppenderForAlt(new StringResourceModel(
@@ -88,9 +88,9 @@ public final class GravatarPanel extends Panel {
     }
 
     private void addDefaultGravatarImage() {
-        final Image imgLocal = new Image(WICKET_ID_GRAVATAR_IMG);
+        final Image imgLocal = new Image(WICKET_ID_GRAVATAR_IMG,(IResource)null);
         imgLocal.add(AttributeModifierFactory
-                .newAttributeAppenderForAlt(new StringResourceModel(
+                .newAttributeAppenderForSrc(new StringResourceModel(
                         "defaultGravatarImageHref", this, null).getString()));
         imgLocal.add(AttributeModifierFactory
                 .newAttributeAppenderForAlt(new StringResourceModel(

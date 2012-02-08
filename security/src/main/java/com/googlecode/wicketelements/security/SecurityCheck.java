@@ -17,8 +17,8 @@
 package com.googlecode.wicketelements.security;
 
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -27,23 +27,23 @@ import java.util.Set;
 
 public interface SecurityCheck {
 
-    <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam);
+    <T extends IRequestableComponent> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam);
 
-    <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam);
+    <T extends IRequestableComponent> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam);
 
-    <T extends Component> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam);
+    <T extends IRequestableComponent> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam);
 
-    <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass);
+    <T extends IRequestableComponent, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass);
 
-    <T extends Component> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam);
+    <T extends IRequestableComponent> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam);
 
-    <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, List<Class<? extends SecurityConstraint>> constraintClassesParam);
+    <T extends IRequestableComponent> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, List<Class<? extends SecurityConstraint>> constraintClassesParam);
 
     boolean isApplicationWithSignInPageSpecified();
 
     boolean isAtLeastOnePermissionGivenToUser(final Collection<String> permissionsParam);
 
-    boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam);
+    boolean isSecurityAnnotatedComponent(final Class<? extends IRequestableComponent> componentClassParam);
 
     Class<? extends Page> signInPage();
 

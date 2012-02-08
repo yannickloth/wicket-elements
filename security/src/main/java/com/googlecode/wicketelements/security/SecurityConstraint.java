@@ -16,7 +16,7 @@
  */
 package com.googlecode.wicketelements.security;
 
-import org.apache.wicket.Component;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 /**
  * Defines a method that permits to check if a security constraint is satisfied before executing an action
@@ -35,5 +35,5 @@ public interface SecurityConstraint {
      * @param <T>                 The component's class.
      * @return {@code true} if the constraint is satisfied, {@code false} else.
      */
-    public <T extends Component> boolean isSatisfiedConstraint(final T componentParam);
+    public <T extends IRequestableComponent> boolean isSatisfiedConstraint(final T componentParam);
 }

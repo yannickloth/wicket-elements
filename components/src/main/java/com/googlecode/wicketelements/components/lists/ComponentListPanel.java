@@ -36,7 +36,7 @@ public class ComponentListPanel extends Panel {
         init(componentListModelParam);
     }
 
-    private final void init(final ComponentListModel componentListModelParam) {
+    private void init(final ComponentListModel componentListModelParam) {
         final ListView<Component> listView = new ListView<Component>("componentList", componentListModelParam) {
             @Override
             protected void populateItem(final ListItem<Component> itemParam) {

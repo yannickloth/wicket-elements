@@ -21,11 +21,12 @@ import com.googlecode.wicketelements.library.behavior.AttributeAppenderFactory;
 import com.googlecode.wicketelements.library.behavior.AttributeModifierFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,9 +42,9 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
     private static final String CSS_CLASS_TOGGLEPANE_TITLE = "we-togglePaneTitle";
     private static final String CSS_CLASS_TOGGLEPANE_CONTENT = "we-togglePaneBody";
     private final TogglePaneState state;
-    private Component titleComponent;
-    private Component contentComponent;
-    private Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
+    private final Component titleComponent;
+    private final Component contentComponent;
+    private final Set<Component> componentsToUpdateOnAjaxRequest = new HashSet<Component>();
     private final WebMarkupContainer container;
     private boolean usingCssToToggleContent;
 
@@ -165,11 +166,11 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
         toggleContent();
     }
 
-    private final void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
+    private void updateComponentsForAjaxRequest(final AjaxRequestTarget targetParam) {
         for (final Component current : componentsToUpdateOnAjaxRequest) {
-            targetParam.addComponent(current);
+            targetParam.add(current);
         }
-        targetParam.addComponent(this);
+        targetParam.add(this);
     }
 
     /**
@@ -187,8 +188,13 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
         setOutputMarkupId(true);
         state = new DefaultTogglePaneState(this);
         add(container);
-        add(CSSPackageResource.getHeaderContribution(TogglePane.class,
-                "TogglePane.css", "screen, projection"));
+        add(new Behavior() {
+            @Override
+            public void renderHead(final Component component, final IHeaderResponse response) {
+                response.renderCSSReference(new CssResourceReference(TogglePane.class,
+                        "TogglePane.css"), "screen, projection");
+            }
+        });
     }
 
     @Override
@@ -196,12 +202,12 @@ public abstract class TogglePane extends Panel implements TogglePaneState {
         super.onBeforeRender();
         addCssClasses();
         if (usingCssToToggleContent) {
-            contentComponent.add(new AttributeAppender("class", true, new AbstractReadOnlyModel<Object>() {
+            contentComponent.add(AttributeAppenderFactory.newAttributeAppenderForClass(new AbstractReadOnlyModel<String>() {
                 @Override
-                public Object getObject() {
+                public String getObject() {
                     return state.isExpanded() ? "displayBlock" : "displayNone";
                 }
-            }, " "));
+            }));
         }
         if (state.isDisabled()) {
             add(AttributeAppenderFactory.newAttributeAppenderForClass("we-togglePane-disabled"));

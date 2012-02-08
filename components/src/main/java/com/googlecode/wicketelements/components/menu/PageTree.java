@@ -35,7 +35,7 @@ public class PageTree {
     private Class<? extends Page> pageClass;
     private List<PageTree> children;
     private PageTree parent;
-    private Map<Class<? extends Page>, PageTree> pageMap = new HashMap<Class<? extends Page>, PageTree>();
+    private final Map<Class<? extends Page>, PageTree> pageMap = new HashMap<Class<? extends Page>, PageTree>();
 
     public PageTree() {
     }

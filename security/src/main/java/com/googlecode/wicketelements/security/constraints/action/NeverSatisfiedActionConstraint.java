@@ -18,7 +18,7 @@ package com.googlecode.wicketelements.security.constraints.action;
 
 import com.googlecode.wicketelements.security.SecurityConstraint;
 import com.googlecode.wicketelements.security.annotations.Factory;
-import org.apache.wicket.Component;
+import org.apache.wicket.request.component.IRequestableComponent;
 
 public class NeverSatisfiedActionConstraint implements SecurityConstraint {
     private static final NeverSatisfiedActionConstraint INSTANCE = new NeverSatisfiedActionConstraint();
@@ -34,7 +34,7 @@ public class NeverSatisfiedActionConstraint implements SecurityConstraint {
         }
     }
 
-    public <T extends Component> boolean isSatisfiedConstraint(final T componentClassParam) {
+    public <T extends IRequestableComponent> boolean isSatisfiedConstraint(final T componentClassParam) {
         return false;
     }
 }

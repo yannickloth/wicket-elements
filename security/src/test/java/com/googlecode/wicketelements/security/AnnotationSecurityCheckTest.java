@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AnnotationSecurityCheckTest {
-    private SecurityCheck securityCheck = new AnnotationSecurityCheck();
+    private final SecurityCheck securityCheck = new AnnotationSecurityCheck();
     private WicketTester tester;
 
     @BeforeClass

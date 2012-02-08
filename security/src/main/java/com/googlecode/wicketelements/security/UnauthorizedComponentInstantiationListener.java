@@ -29,7 +29,7 @@ import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 public class UnauthorizedComponentInstantiationListener implements IUnauthorizedComponentInstantiationListener {
     private transient static final Logger LOGGER = LoggerFactory.getLogger("wicketelements.security");
-    private SecurityCheck securityCheck;
+    private final SecurityCheck securityCheck;
 
     public UnauthorizedComponentInstantiationListener(final SecurityCheck securityCheckParam) {
         PARAM_REQ.Object.requireNotNull(securityCheckParam, "The SecurityCheck object must not be null.");

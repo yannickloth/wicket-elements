@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,14 @@ import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 public class AnnotationAuthorizationStrategy implements IAuthorizationStrategy {
 
     private transient static final Logger LOGGER = LoggerFactory.getLogger("wicketelements.security");
-    private SecurityCheck securityCheck;
+    private final SecurityCheck securityCheck;
 
     public AnnotationAuthorizationStrategy(final SecurityCheck securityCheckParam) {
         PARAM_REQ.Object.requireNotNull(securityCheckParam, "SecurityCheck object must not be null.");
         securityCheck = securityCheckParam;
     }
 
-    public <T extends Component> boolean isInstantiationAuthorized(final Class<T> componentClassParam) {
+    public <T extends IRequestableComponent> boolean isInstantiationAuthorized(final Class<T> componentClassParam) {
         LOGGER.debug("Checking if instantiation is authorized for {}", componentClassParam.getName());
         PARAM_REQ.Object.requireNotNull(componentClassParam, "The component's class parameter must not be null.");
         if (securityCheck.isSignInRequired()) {

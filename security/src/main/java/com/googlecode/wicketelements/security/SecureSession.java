@@ -17,9 +17,9 @@
 package com.googlecode.wicketelements.security;
 
 import com.googlecode.jbp.common.requirements.Reqs;
-import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +98,7 @@ public class SecureSession extends WebSession {
 
     private void runCustomInvalidators() {
         for (final SessionInvalidator current : invalidators) {
-            current.invalidate((WebSession) WebSession.get());
+            current.invalidate(WebSession.get());
         }
     }
 }

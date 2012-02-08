@@ -55,10 +55,6 @@
             <artifactId>jbp-common</artifactId>
         </dependency>
         <dependency>
-            <artifactId>library</artifactId>
-            <groupId>com.googlecode.wicketelements</groupId>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>

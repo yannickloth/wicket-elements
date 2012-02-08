@@ -17,10 +17,10 @@
 package com.googlecode.wicketelements.security;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 
 /**
  * @author Yannick LOTH
@@ -33,7 +33,6 @@ public abstract class SecureWebApplication extends WebApplication {
 
     @Override
     public Session newSession(final Request request, final Response response) {
-        final Session session = new SecureSession(request);
-        return session;
+        return new SecureSession(request);
     }
 }

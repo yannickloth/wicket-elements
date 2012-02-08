@@ -16,32 +16,32 @@
  */
 package com.googlecode.wicketelements.library.behavior;
 
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.StringHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
-public class LessFileHeaderContributor extends AbstractBehavior implements IHeaderContributor {
-    private ResourceReference reference;
+public class LessFileBehavior extends Behavior {
+    private final ResourceReference reference;
 
-    public LessFileHeaderContributor(final Class<?> scopeParam, final String nameParam) {
+    public LessFileBehavior(final Class<?> scopeParam, final String nameParam) {
         PARAM_REQ.Object.requireNotNull(scopeParam, "less.js file scope must not be null");
         PARAM_REQ.String.requireNotBlank(nameParam, "less.js file name must not be blank");
-        reference = new ResourceReference(scopeParam, nameParam);
+        reference = new PackageResourceReference(scopeParam, nameParam);
     }
 
-    public void renderHead(final IHeaderResponse iHeaderResponseParam) {
+    @Override
+    public void renderHead(final Component componentParam, final IHeaderResponse iHeaderResponseParam) {
         if (reference == null) {
             throw new IllegalArgumentException("reference cannot be null");
         }
-        final CharSequence url = RequestCycle.get().urlFor(reference);
+        final CharSequence url = RequestCycle.get().urlFor(reference, null);
         final String contribution = buildHeaderString(url);
-        final IHeaderContributor stringHeaderContributor = new StringHeaderContributor(contribution);
-        stringHeaderContributor.renderHead(iHeaderResponseParam);
+        iHeaderResponseParam.renderString(contribution);
     }
 
     private String buildHeaderString(CharSequence urlParam) {

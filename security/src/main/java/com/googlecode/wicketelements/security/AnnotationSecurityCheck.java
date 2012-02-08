@@ -21,8 +21,8 @@ import com.googlecode.jbp.common.requirements.Reqs;
 import com.googlecode.wicketelements.security.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.settings.IApplicationSettings;
 
 import java.lang.annotation.Annotation;
@@ -34,7 +34,7 @@ import static com.googlecode.jbp.common.requirements.Reqs.PARAM_REQ;
 
 public class AnnotationSecurityCheck implements SecurityCheck {
 
-    public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam) {
+    public <T extends IRequestableComponent> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForEnable(final T componentParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentParam, "Cannot find security constraints an a null component!");
         List<Class<? extends SecurityConstraint>> list = Collections.emptyList();
         if (componentParam.getClass().isAnnotationPresent(EnableAction.class)) {
@@ -44,7 +44,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return list;
     }
 
-    public <T extends Component> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam) {
+    public <T extends IRequestableComponent> List<Class<? extends SecurityConstraint>> findSecurityConstraintsForRender(final T componentParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentParam, "Cannot find security constraints an a null component!");
         List<Class<? extends SecurityConstraint>> list = Collections.emptyList();
         if (componentParam.getClass().isAnnotationPresent(RenderAction.class)) {
@@ -54,7 +54,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return list;
     }
 
-    public <T extends Component> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam) {
+    public <T extends IRequestableComponent> List<Class<? extends InstantiationSecurityConstraint>> findSecurityConstraintsForInstantiation(final Class<T> componentClassParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentClassParam, "Cannot find security constraints an a null component class!");
         List<Class<? extends InstantiationSecurityConstraint>> list = Collections.emptyList();
         if (componentClassParam.isAnnotationPresent(InstantiateAction.class)) {
@@ -64,7 +64,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return list;
     }
 
-    public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
+    public <T extends IRequestableComponent> boolean isAllSecurityConstraintsSatisfiedForAction(final T componentParam, final List<Class<? extends SecurityConstraint>> securityConstraintsParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentParam, "Cannot find security constraints on a null component!");
         Reqs.PARAM_REQ.Object.requireNotNull(securityConstraintsParam, "Cannot check for constraints satisfaction with null list of constraints!");
         for (final Class<? extends SecurityConstraint> constraintClass : securityConstraintsParam) {
@@ -95,7 +95,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         }
     }
 
-    public <T extends Component> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam) {
+    public <T extends IRequestableComponent> boolean isAllSecurityConstraintsSatisfiedForInstantiation(final Class<T> componentClassParam, final List<Class<? extends InstantiationSecurityConstraint>> securityConstraintsParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentClassParam, "Cannot find security constraints on a null component class!");
         Reqs.PARAM_REQ.Object.requireNotNull(securityConstraintsParam, "Cannot check for constraints satisfaction with null list of constraints!");
         for (final Class<? extends InstantiationSecurityConstraint> constraintClass : securityConstraintsParam) {
@@ -126,7 +126,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         }
     }
 
-    public final boolean isSecurityAnnotatedComponent(final Class<? extends Component> componentClassParam) {
+    public final boolean isSecurityAnnotatedComponent(final Class<? extends IRequestableComponent> componentClassParam) {
         Reqs.PARAM_REQ.Object.requireNotNull(componentClassParam, "Cannot find security constraints on a null component class!");
         return AnnotationHelper.isQualifiedAnnotationPresent(componentClassParam, SecurityActionQualifier.class);
     }
@@ -142,7 +142,7 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return false;
     }
 
-    public final <T extends Component, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass) {
+    public final <T extends IRequestableComponent, A extends Annotation> Set<String> findImpliedPermissions(final Class<T> componentClassParam, final Class<A> actionAnnotationClass) {
         PARAM_REQ.Object.requireNotNull(componentClassParam, "Component class must not be null.");
         PARAM_REQ.Object.requireNotNull(actionAnnotationClass, "Action annotation class must not be null.");
         final Set<String> impliedPermissions = new HashSet<String>();
@@ -164,14 +164,14 @@ public class AnnotationSecurityCheck implements SecurityCheck {
         return impliedPermissions;
     }
 
-    private final <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
+    private <T extends Annotation> boolean impliesAction(final Class<T> annotationParam, final Class<? extends Annotation> impliedParam) {
         if (impliedParam.isAssignableFrom(annotationParam)) {
             return true;
         }
         if (annotationParam.isAnnotationPresent(ImpliesSecurityAction.class)) {
             final ImpliesSecurityAction a = annotationParam.getAnnotation(ImpliesSecurityAction.class);
-            for (final Class<? extends Annotation> annotClass : a.impliedActions()) {
-                return impliesAction(annotClass, impliedParam);
+            if (a.impliedActions().length > 0) {
+                return impliesAction(a.impliedActions()[0], impliedParam);
             }
         }
         return false;

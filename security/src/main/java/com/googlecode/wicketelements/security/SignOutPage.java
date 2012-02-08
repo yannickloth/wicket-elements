@@ -19,8 +19,9 @@ package com.googlecode.wicketelements.security;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +39,12 @@ public class SignOutPage extends WebPage {
 
     public SignOutPage(final PageParameters params) {
         PARAM_REQ.Object.requireNotNull(params, "The page parameters parameter must not be null.");
-        final String page = params.getString(REDIRECTPAGE_PARAM);
+        final StringValue page = params.get(REDIRECTPAGE_PARAM);
         Class<? extends Page> pageClass;
-        if (page != null && !StringUtils.isBlank(page)) {
+        if (page != null && !StringUtils.isBlank(page.toString())) {
             LOGGER.debug("Redirect page not blank: {}", page);
             try {
-                pageClass = (Class<? extends Page>) Class.forName(page);
+                pageClass = (Class<? extends Page>) Class.forName(page.toString());
             } catch (ClassNotFoundException ex) {
                 LOGGER.debug("Class not found for redirect page: {}", page);
                 pageClass = getApplication().getHomePage();
@@ -54,7 +55,6 @@ public class SignOutPage extends WebPage {
         }
         setStatelessHint(true);
         getSession().invalidateNow();
-        getRequestCycle().setRedirect(true);
         setResponsePage(pageClass);
     }
 }

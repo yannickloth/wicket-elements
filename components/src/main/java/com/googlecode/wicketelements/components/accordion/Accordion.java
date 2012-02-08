@@ -75,7 +75,7 @@ public class Accordion extends Panel implements AccordionState {
         state.expandAllTogglePanes();
     }
 
-    public static final String getTogglePanesListElementWicketId() {
+    public static String getTogglePanesListElementWicketId() {
         return TOGGLE_PANES_LIST_ELEMENT_WICKET_ID;
     }
 
@@ -96,7 +96,6 @@ public class Accordion extends Panel implements AccordionState {
 
     private void doOnAddTogglePane(final TogglePane togglePaneParam) {
         togglePaneParam.addComponentToUpdateOnAjaxRequest(this);
-        boolean wasExpanded = togglePaneParam.isExpanded();
         //if it's expanded, collapse and then re-expand it to trigger the event listener
         //obviously, the last added TogglePane that is already expanded will be the expanded one in the accordion
         togglePaneParam.toggleContent();
