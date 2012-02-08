@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>parent</artifactId>
+        <artifactId>wicket-elements-parent</artifactId>
         <groupId>com.googlecode.wicketelements</groupId>
         <version>1.4.8-SNAPSHOT</version>
-        <relativePath>../parent</relativePath>
+        <relativePath>../wicket-elements-parent</relativePath>
     </parent>
     <groupId>com.googlecode.wicketelements</groupId>
-    <artifactId>library</artifactId>
+    <artifactId>wicket-elements-library</artifactId>
     <version>1.4.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Wicket Elements Class Library</name>

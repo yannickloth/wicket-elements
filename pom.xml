@@ -36,10 +36,10 @@
         </developer>
     </developers>
     <modules>
-        <module>parent</module>
-        <module>security</module>
-        <module>security-shiro</module>
-        <module>components</module>
-        <module>library</module>
+        <module>wicket-elements-parent</module>
+        <module>wicket-elements-security</module>
+        <module>wicket-elements-security-shiro</module>
+        <module>wicket-elements-components</module>
+        <module>wicket-elements-library</module>
     </modules>
 </project>

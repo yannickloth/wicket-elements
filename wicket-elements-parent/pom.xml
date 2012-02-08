@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.googlecode.wicketelements</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>wicket-elements-parent</artifactId>
     <version>1.4.8-SNAPSHOT</version>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -41,13 +41,13 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <artifactId>security</artifactId>
+                <artifactId>wicket-elements-security</artifactId>
                 <groupId>com.googlecode.wicketelements</groupId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <artifactId>library</artifactId>
+                <artifactId>wicket-elements-library</artifactId>
                 <groupId>com.googlecode.wicketelements</groupId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
