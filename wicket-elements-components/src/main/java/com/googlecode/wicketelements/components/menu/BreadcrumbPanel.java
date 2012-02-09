@@ -24,6 +24,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.StringResourceModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,12 +101,21 @@ public class BreadcrumbPanel extends Panel {
                         };
                         {
                             final Label languageLabel = new Label(
-                                    "breadcrumbLabel",
-                                    getString(pageClass.getCanonicalName()));
+                                    "breadcrumbLabel", new LoadableDetachableModel<String>() {
+                                @Override
+                                protected String load() {
+                                    return new StringResourceModel(pageClass.getCanonicalName(), getPage(), null, (Object) null).getString();
+                                }
+                            });
                             languageLabel.setRenderBodyOnly(true);
                             link.add(languageLabel);
                         }
-                        link.add(AttributeModifierFactory.newAttributeAppenderForTitle(getString(pageClass.getCanonicalName())));
+                        link.add(AttributeModifierFactory.newAttributeAppenderForTitle(new LoadableDetachableModel<String>() {
+                            @Override
+                            protected String load() {
+                                return new StringResourceModel(pageClass.getCanonicalName(), getPage(), null, (Object) null).getString();
+                            }
+                        }));
                         item.add(link);
                     }
                     item.setOutputMarkupId(true);
