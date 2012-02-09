@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.googlecode.wicketelements</groupId>
     <artifactId>wicket-elements-parent</artifactId>
-    <version>1.4.8</version>
+    <version>1.4.9-SNAPSHOT</version>
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
