@@ -104,7 +104,7 @@ public class BreadcrumbPanel extends Panel {
                                     "breadcrumbLabel", new LoadableDetachableModel<String>() {
                                 @Override
                                 protected String load() {
-                                    return new StringResourceModel(pageClass.getCanonicalName(), getPage(), null, (Object) null).getString();
+                                    return new StringResourceModel(pageClass.getCanonicalName(), BreadcrumbPanel.this.getPage(), null, (Object) null).getString();
                                 }
                             });
                             languageLabel.setRenderBodyOnly(true);
@@ -113,7 +113,7 @@ public class BreadcrumbPanel extends Panel {
                         link.add(AttributeModifierFactory.newAttributeAppenderForTitle(new LoadableDetachableModel<String>() {
                             @Override
                             protected String load() {
-                                return new StringResourceModel(pageClass.getCanonicalName(), getPage(), null, (Object) null).getString();
+                                return new StringResourceModel(pageClass.getCanonicalName(), BreadcrumbPanel.this.getPage(), null, (Object) null).getString();
                             }
                         }));
                         item.add(link);
