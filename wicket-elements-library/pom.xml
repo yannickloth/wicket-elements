@@ -4,12 +4,12 @@
     <parent>
         <artifactId>wicket-elements-parent</artifactId>
         <groupId>com.googlecode.wicketelements</groupId>
-        <version>1.4.9-SNAPSHOT</version>
+        <version>1.4.9</version>
         <relativePath>../wicket-elements-parent</relativePath>
     </parent>
     <groupId>com.googlecode.wicketelements</groupId>
     <artifactId>wicket-elements-library</artifactId>
-    <version>1.4.9-SNAPSHOT</version>
+    <version>1.4.9</version>
     <packaging>jar</packaging>
     <name>Wicket Elements Class Library</name>
     <description>A class library which makes using Wicket easier.</description>
