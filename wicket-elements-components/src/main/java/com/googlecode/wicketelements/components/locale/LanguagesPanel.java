@@ -23,8 +23,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.StringResourceModel;
 
 import java.util.Locale;
 
@@ -104,13 +102,7 @@ public class LanguagesPanel extends Panel {
                         onLocaleLink(link);
                     }
                     link.add(AttributeModifierFactory
-                            .newAttributeAppenderForTitle(new LoadableDetachableModel<String>() {
-                                @Override
-                                protected String load() {
-                                    return new StringResourceModel(
-                                            upperCaseLocale, getPage(), null, (Object)null).getString();
-                                }
-                            }));
+                            .newAttributeAppenderForTitle(locale.getDisplayLanguage(locale)));
                     item.add(link);
                 }
                 item.setOutputMarkupId(true);
