@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -40,9 +41,10 @@ public class BreadcrumbPanel extends Panel {
     private final PageTreeModel pageTreeModel;
     private ListView<Class<? extends Page>> lv;
 
-    public BreadcrumbPanel(final String id) {
+    public BreadcrumbPanel(final String id, final IModel<String> messageModelParam) {
         super(id);
         pageTreeModel = new PageTreeModel();
+        add(new Label("breadcrumbMessage", messageModelParam));
     }
 
     private List<Class<? extends Page>> buildBreadcrumbPageList() {
