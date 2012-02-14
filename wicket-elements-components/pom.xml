@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.googlecode.wicketelements</groupId>
     <artifactId>wicket-elements-components</artifactId>
-    <version>1.4.10</version>
+    <version>1.4.11-SNAPSHOT</version>
     <parent>
         <artifactId>wicket-elements-parent</artifactId>
         <groupId>com.googlecode.wicketelements</groupId>
-        <version>1.4.10</version>
+        <version>1.4.11-SNAPSHOT</version>
         <relativePath>../wicket-elements-parent</relativePath>
     </parent>
     <name>Wicket Elements Components</name>
